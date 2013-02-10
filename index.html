@@ -1,0 +1,39 @@
+<h1>Hello, world!</h1>
+<ul id="makes" ><ul>
+<script type="text/javascript" src="modules.js"></script>
+<script type="text/javascript">
+    var greet = require('lib/hello');
+
+    greet.sayHello('world');
+var users = require('users');
+var db = require('db').current();
+    var $ = require('jquery/core');
+
+    db.getView('light-app', 'lights', function (err, data) {
+        if (err) {
+            // an error occurred
+            return alert(err);
+        }
+        for (var i = 0; i < data.rows.length; i++) {
+            $('<li/>').text(data.rows[i].key).appendTo('#makes');
+        }
+    });
+
+
+
+
+users.list(function (err,list){
+if(err){
+alert(err);
+}
+else
+{}
+});
+
+
+users.create('testuser','testing',{roles:['example']}, function (err){if(err){} 
+else{} });
+
+
+console.log("done")
+</script>
