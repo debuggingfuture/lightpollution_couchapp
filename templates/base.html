@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Light Pollution Map| {{title}}</title>
+		<link href="{{baseURL}}/static/style/css/bootstrap.css" rel="stylesheet">
+		<link href="{{baseURL}}/static/style/css/bootstrap-responsive.css" rel="stylesheet">
+		<link href="{{baseURL}}/static/style/css/map.css" rel="stylesheet">
+		<script type="text/javascript"
+		src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAD0DuFfwB-m7JYCejyWCwkVFrRIvyH3RE&sensor=true"></script>
+		<!-- 		need explicit loading 1.4.2 for duality.js 1.9.2 not supproted?-->
+		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script type="text/javascript" src="//raw.github.com/imsky/holder/master/holder.js"></script>
+		<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js"></script>
+		<!-- 		<script src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-carousel.js"></script> -->
+		<script type="text/javascript" src="{{baseURL}}/modules.js"></script>
+		<script type="text/javascript" src="{{baseURL}}/duality.js"></script>
+		<script type="text/javascript">
+            //can we log baseUrl?
+            var users = require('users');
+            var db = require('db').current();
+            var $ = require('jquery/core');
+		</script>
+	</head>
+	<body>
+		<div class="container">
+			{{{include "navigation.html"}}}
+<!-- 			Base{{baseURL}}
+			def{{a}}
+			{{doc._id}} -->
+			<div id="content">
+				{{{content}}}
+			</div>
+		</div>
+	</body>
+
+</html>
+

@@ -1,0 +1,101 @@
+<div class="container">
+	<div class="row">
+		<div class="span12">
+			<div id="map_canvas" style="color:black" ></div>
+		</div>
+	</div>
+	<div class="row">
+		<h2 class="mark-statement">Found light pollution? <a class="btn btn-xlarge btn-primary" href="spots/add">Report here</a></h2>
+
+	</div>
+	<div class="row spots">
+		<h3>List of light pollution spots</h3>
+	</div>
+	{{#each rows}}
+	{{#with value}}
+	<!-- Used fix height, need to sync in css
+	just happended to use nav-->
+	<div class="row spots">
+		<div class="span4 nav spot-image main">
+			<div >
+				<a href="#" class="thumbnail"> <img data-src="holder.js/300x250" alt=""></a>
+			</div>
+		</div>
+		<div class="span8 nav main">
+			<div class="spot-details">
+				<div class="row">
+					<div class="span6">
+						<h4>{{title}} <span class="label label-important">Serious</span><span class="label label-success">New</span></h4>
+					</div>
+					<div class="span6">
+						<b>{{desc}}</b>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span2">
+						Upload Date:
+					</div>
+					<div class="span4">
+						{{pp_date}}
+					</div>
+				</div>
+				<div class="row">
+					<div class="span2">
+						Uploader:
+					</div>
+					<div class="span4">
+						{{uploader}}
+					</div>
+				</div>
+				<div class="row">
+					<div class="span2">
+						Location:
+					</div>
+					<div class="span4">
+						{{locationDesc}}
+					</div>
+				</div>
+				{{#if spottime}}
+				<div class="row">
+					<div class="span2">
+						Reported Time:
+					</div>
+					<div class="span4">
+						{{spottime}}
+					</div>
+				</div>
+				{{/if}}
+			</div>
+		</div>
+	</div>
+	{{/with}}
+	{{/each}}
+	<b>End of light pollution spots</b>
+
+	{{{include "footer.html"}}}
+</div>
+<!--
+<script src="script/bootstrap.js"></script>
+<script src="script/bootstrap.min.js"></script>
+-->
+
+<script type="text/javascript" charset="utf-8">
+    //init only after thispage loaded
+    $(document).ready(function() {
+        var gmap = require('lib/gmap');
+        gmap.initialize("map_canvas");
+        gmap.setupHK();
+        //UI control
+        // $('.carousel').carousel()
+
+        //should call after holder.js
+        // var layout = require('lib/layout');
+        // layout.equalHeight();
+
+        $("#craeteSpotButton").click(function() {
+            console.log("create");
+        });
+        //UI control
+
+    })
+</script>

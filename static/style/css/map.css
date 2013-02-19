@@ -1,0 +1,118 @@
+@CHARSET "UTF-8";
+
+body {
+	/*	color: white;*/
+	color: white;
+	background-color: black;
+	padding-top: 60px;
+	padding-bottom: 60px;
+	/*				background-image: url('https://lh3.googleusercontent.com/-7nFfLhXEhks/TxhNA5efGWI/AAAAAAAAAJ4/r8vUcKyifx8/s770/IMG_7174.jpg');*/
+	/*	background-image: url('../img/bg.jpg'); */
+	background-size: 75% 100%;
+	background-repeat: no-repeat;
+	background-position: center top;
+}
+
+.lightmap-navbar {
+	color: white;
+	font-size: 20px;
+}
+
+.btn-xlarge {
+	padding: 10px 16px;
+	font-size: 36px;
+	line-height: normal;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+.mark-statement {
+	float: right;
+}
+.headerImage {
+	margin: 2px;
+	height: auto;
+	width: 100%;
+	max-width: 100%;
+	max-height: 100%;
+	/*	float: left;*/
+	text-align: center;
+}
+/*div.grid {
+ color:black;
+ background-color: white;
+ margin-top:10px;
+ margin-bottom:20px;
+ }*/
+
+.item {
+	height: 370px;
+}
+div.spots .main {
+	height: 290px;
+	background-color: white;
+	color: black;
+	/*	text-align: center;*/
+
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	min-height: 40px;
+	line-height: 40px;
+}
+.spot-image {
+}
+.spot-details {
+	/*	float:left ;*/
+	padding: 10px;
+	text-align: left;
+}
+
+#container {
+}
+
+.featurette {
+	padding-top: 120px; /* Vertically center images part 1: add padding above and below text. */
+	overflow: hidden; /* Vertically center images part 2: clear their floats. */
+}
+.featurette-image {
+	margin-top: -120px; /* Vertically center images part 3: negative margin up the image the same amount of the padding to center it. */
+	height: 300px;
+	width: 300px;
+}
+
+/* Give some space on the sides of the floated elements so text doesn't run right into it. */
+.featurette-image.pull-left {
+	margin-right: 40px;
+}
+.featurette-image.pull-right {
+	margin-left: 40px;
+}
+
+/* Thin out the marketing headings */
+.featurette-heading {
+	font-size: 50px;
+	font-weight: 300;
+	line-height: 1;
+	letter-spacing: -1px;
+}
+
+/*html {
+ height: 100%
+ }
+ body {
+ height: 100%;
+ width: 100%;
+ margin: 0;
+ padding: 0
+ }*/
+#map_canvas {
+	margin-left: auto;
+	margin-right: auto;
+	height: 600px;
+	width: 100%;
+	/*				need to set as percentage...of what? by defauly just maximize itself
+	 */
+	/*				 TODO study how css fit parent*/
+
+}

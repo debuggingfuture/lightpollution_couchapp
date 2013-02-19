@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Light Pollution Map</title>
+
+		<link href="static/style/css/bootstrap.css" rel="stylesheet">
+		<link href="static/style/css/bootstrap-responsive.css" rel="stylesheet">
+		<link href="static/style/css/map.css" rel="stylesheet">
+		<script type="text/javascript"
+		src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAD0DuFfwB-m7JYCejyWCwkVFrRIvyH3RE&sensor=true"></script>
+		<script type="text/javascript">
+			var users = require('users');
+			var db = require('db').current();
+			var $ = require('jquery/core');
+			var handlebars = require('handlebars');
+			var source = $("#nav-template").html();
+			var template = Handlebars.compile(source);
+
+			// var template = handlebars.compile(source);
+			// $("nav").append(template)
+		</script>
+	</head>
+	<body>
+		<div class="container">
+
+			{{{include "navigation.html"}}}
+
+		
+			<h1>Hong Kong Light Pollution Map</h1>
+			<p>
+				Here mark the light pollution spot in Hong Kong
+			</p>
+
+			<p>
+				Darkened Hong Kong is more bright
+			</p>
+			<p>
+				Help us by adding your light pollution spots
+			</p>
+
+		</div>
+
+		<div id="map_canvas" style="color:black" ></div>
+
+		<div class="container">
+			<!--
+			<div class="hero-unit">
+			<h1>Hello, world!</h1>
+			<p>
+			This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.
+			</p>
+			<p>
+			<a class="btn btn-primary btn-large">Learn more &raquo;</a>
+			</p>
+			</div>
+
+			<div class="row">
+
+			<p>
+			Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
+			</p>
+			<p>
+			<a class="btn" href="#">View details &raquo;</a>
+			</p>
+			</div> -->
+
+		</div>
+		<div class="span8">
+			<button type="button" id="craeteSpotButton" class="btn btn-primary">
+				Mark new Light Pollution Spot
+			</button>
+		</div>
+
+		<div class="span8">
+			Testing
+			<!-- 		template or generate here? -->
+
+			{{title}} -All Areas
+			<div class="span4">
+				{{#blackspot_list}}
+				<div>
+					Spot {{author}}
+					{{summary}}
+				</div>
+				{{/blackspot_list}}
+			</div>
+			-All Areas End
+		</div>
+		<!-- /container -->
+
+		Background Photo by <a href="http://thierrycohen.com/pages/work/starlights.html#">Thierry Cohen</a>
+
+	</body>
+
+	<script type="text/javascript" charset="utf-8">
+		var gmap = require('gmap');
+		gmap.initialize();
+
+		var marker = new google.maps.Marker({
+			map : map,
+			position : hongkong_center
+		});
+
+		google.maps.event.addListener(marker, 'click', function() {
+			coordInfoWindow.open(map, marker);
+		});
+
+		//UI control
+
+		$("#craeteSpotButton").click(function() {
+			console.log("create");
+		});
+		//UI control
+
+	</script>
+
+</html>
+

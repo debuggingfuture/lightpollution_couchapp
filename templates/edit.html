@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>{{ title }}| Light Pollution Map</title>
+	</head>
+	<body>
+		<form id="new-post" action="#" method="post">
+			<!-- 			_list/blackspot/all-spots -->
+			<h1>{{pageTitle}}</h1>
+			<p>
+				<label>Title</label>
+				<input type="text" size="50" name="title" value="{{title}}">
+				<span id="saved" style="display:none;">Saved</span>
+				<input type="submit" value="Save &rarr;"/>
+			</p>
+
+		</form>
+	</body>
+
+	<script src="../../vendor/couchapp/loader.js"></script>
+	<script type="text/javascript" charset="utf-8">
+	$.couch.app(function(app) {
+	var postDoc = {{{doc}}};
+	
+		$("form#new-post").submit(function() {
+			// postDoc.author = $("textarea[name=body]").val();
+			postDoc.author = $("input[name=author]").val();
+			postDoc.title = $("input[name=title]").val();
+			// var dtags = [], tags = $("input[name=tags]").val().split(",");
+			// for(var i in tags) {
+			// dtags.push($.trim(tags[i]));
+			// }
+			// postDoc.tags = dtags;
+			
+			// $('label[for=body]').append(' <em>with ' + (postDoc.format || 'html') + '</em>');
+
+			if(!postDoc.created_at) {
+				postDoc.created_at = new Date();
+			}
+			if(!postDoc._id) {
+			postDoc._id = postDoc.title;
+			}
+
+			// 			key as location and title
+			app.db.saveDoc(postDoc, {
+				success : function(resp) {
+					$("#saved").text("Saved _rev: " + resp.rev).fadeIn(500).fadeOut(6000);
+					// $('h1').html('Editing <a href="' + path.show('post', resp.id) + '">' + resp.id + '</a> by ' + postDoc.author);
+				},
+				error : function() {
+					$("#saved").text("Ding!");
+				}
+			});
+			console.log("raised");
+			return false;
+		});
+		});
+
+	</script>
+
+</html>

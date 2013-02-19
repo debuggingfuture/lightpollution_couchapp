@@ -2,17 +2,26 @@
 	"name": "light-app",
 	"version": "0.0.1",
 	"description": "The simplest possible app",
-	"attachments": ["index.html"],
+	"attachments": ["static"],
 	"modules": ["lib"]  ,
 	"load": "lib/app",
+	"handlebars": {
+		"all_partials": false,
+		"templates": "templates"
+	},
+	"duality": {
+        "base_template": "base.html"
+    },
 	"dependencies": {
 		"attachments": null,
 		"modules": null ,
 		"properties": null,
 		"db": null,
 		"jquery": null,
-		"session":null,
-		"users":null
-
+		"session": null,
+		"users": null,
+		"handlebars": null,
+		"handlebars-helpers": null,
+		"duality-handlebars": null
 	}
 }
