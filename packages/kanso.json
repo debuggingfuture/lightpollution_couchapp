@@ -1,0 +1,9 @@
+{
+	"name": "i18next-node-kanso",
+	"version": "0.0.1",
+	"description": "Kanso app ported from the i18next-node",
+	"modules": "index.js"  ,
+	"dependencies": {
+		"modules": null
+	}
+}

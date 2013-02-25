@@ -3,31 +3,32 @@
 		<div class="navbar-inner lightmap-navbar">
 			<div class="container">
 				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
-				<a class="brand" href="#">Light Pollution Map</a>
+				<a class="brand" href="#">{{t "app.name"}}</a>
 				<div class="nav-collapse collapse">
+
 					<ul class="nav">
 						<li class="active">
-							<a href="{{baseURL}}/">Home</a>
+							<a href="{{baseURL}}/">{{t "nav.home"}}</a>
 						</li>
 						<li>
-							<a href="{{baseURL}}/lightpollution">Light Pollution</a>
+							<a href="{{baseURL}}/about">{{t "nav.light_pollution"}}</a>
 						</li>
 						<li>
-							<a href="{{baseURL}}/about">About</a>
-						</li>
-						<li>
-							<a href="{{baseURL}}/spots/add">Add</a>
+							<a href="{{baseURL}}/spots/add">{{t "nav.add"}}</a>
 						</li>
 						<li>
 							<a href="">Facebook</a>
 						</li>
 						<li>
-							<a href="about">中文</a>
+							<a href="?setLng=zh-TW">中文</a>
 						</li>
 						<li>
-							<a href="about">English</a>
+							<a href="?setLng=en-US">English</a>
 						</li>
 					</ul>
+					<form id="search-form" class="navbar-search pull-right">
+						<input id="search" type="text" class="search-query" placeholder={{t "nav.search"}}>
+					</form>
 				</div><!--/.nav-collapse -->
 			</div>
 		</div>
@@ -47,9 +48,9 @@
 					<img class="headerImage" src="{{baseURL}}/static/style/img/bg.jpg" alt>
 					<div class="container">
 						<div class="carousel-caption">
-							<h1>Hong Kong Light Pollution Map</h1>
+							<h1>{{t "header1.title"}}</h1>
 							<p class="lead">
-								Database for reporting the light pollution black spots in Hong Kong
+								{{t "header1.desc"}}
 							</p><p></p>
 							<a class="btn btn-large btn-primary" href="#">Sign up today</a>
 						</div>
@@ -59,9 +60,9 @@
 					<img class="headerImage" src="{{baseURL}}/static/style/img/bg.jpg" alt>
 					<div class="container">
 						<div class="carousel-caption">
-							<h1>香港光害地圖</h1>
+							<h1>{{t "header2.title"}}</h1>
 							<p class="lead">
-								舉報香港光害黑點
+								{{t "header2.desc"}}
 							</p>
 							<a class="btn btn-large btn-primary" href="#">Sign up today</a>
 						</div>

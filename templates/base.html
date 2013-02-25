@@ -14,17 +14,69 @@
 		<!-- 		<script src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-carousel.js"></script> -->
 		<script type="text/javascript" src="{{baseURL}}/modules.js"></script>
 		<script type="text/javascript" src="{{baseURL}}/duality.js"></script>
+		<!-- 		<script type="text/javascript" src="	//raw.github.com/fnando/i18n-js/master/vendor/assets/javascripts/i18n.js"></script> -->
+		<!-- 		<script type="text/javascript" src="//jamuhl.github.com/i18next/public/download/versions/i18next-1.6.0.min.js"></script> -->
+
+		<!--  -->
 		<script type="text/javascript">
             //can we log baseUrl?
             var users = require('users');
             var db = require('db').current();
             var $ = require('jquery/core');
+            var handlebars = require('handlebars');
+            // handlebars.registerHelper('I18n', function(str) {
+            // return (I18n != undefined ? I18n.t(str) : str);
+            // });
+
+            // handlebars.registerHelper('i18n', function(str) {
+            // // console.log(str);
+            //
+            // return (i18n != undefined ? i18n.t(str) : str);
+            // });
+
+            //Localization
+            // I18n.defaultLocale = "en-US";
+            // I18n.locale = "en-US";
+            // console.log(I18n.currentLocale());
+            //
+            // I18n.translations = {};
+            // I18n.translations["en-US"] = {
+            // message : "Some special message for you"
+            // }
+
+            // with options
+
+            // var option = {
+            // lng : "en-US",
+            // resGetPath : '{{baseURL}}/static/locales/__lng__/__ns__.json'
+            // };
+            //
+            // // zh_TW
+            //
+            // $.i18n.init(option);
+            // //Need to make sure it is finish before use it
+
+            $().ready(function() {
+                // // "later"
+                // var x = $.t("app.name");
+                // //TODO write an unit test to check the translation ability
+                // console.log(x)
+                // // console.log("translated");
+                // // console.log(I18n.t("message"));
+                //
+
+                $("#search-form").submit(function() {
+
+                    console.log("register search helper");
+                })
+            });
+
 		</script>
 	</head>
 	<body>
 		<div class="container">
 			{{{include "navigation.html"}}}
-<!-- 			Base{{baseURL}}
+			<!-- 			Base{{baseURL}}
 			def{{a}}
 			{{doc._id}} -->
 			<div id="content">

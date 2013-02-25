@@ -1,5 +1,5 @@
 /*global window: false, getRow: true, start: true, $: false, pageTracker: true,
-  duality: true, log: true, console: true, send: true */
+duality: true, log: true, console: true, send: true */
 
 /**
  * The core module contains functions used by duality to facilitate the running
@@ -9,42 +9,27 @@
  * @module
  */
 
-
 /**
  * Module dependencies
  */
 
 var settings = require('settings/root'), // module auto-generated
-    url = require('url'),
-    db = require('db'),
-    utils = require('./utils'),
-    session = require('session'),
-    cookies = require('cookies'),
-    events = require('./events'),
-    urlParse = url.parse,
-    urlFormat = url.format,
-    _ = require('underscore')._,
-    flashmessages,
-    templates;
-
+url = require('url'), db = require('db'), utils = require('./utils'), session = require('session'), cookies = require('cookies'), events = require('./events'), urlParse = url.parse, urlFormat = url.format, _ = require('underscore')._, flashmessages, templates;
 
 try {
     flashmessages = require('./flashmessages');
-}
-catch (e) {
+} catch (e) {
     // may not be available
 }
 
 try {
     templates = require('duality/templates');
-}
-catch (e) {
+} catch (e) {
     // may not be available
 }
 
-
 var BASE_TEMPLATE = 'base.html';
-if (settings.duality && settings.duality.base_template) {
+if(settings.duality && settings.duality.base_template) {
     BASE_TEMPLATE = settings.duality.base_template;
 }
 
@@ -57,7 +42,6 @@ if (settings.duality && settings.duality.base_template) {
  */
 
 //exports.initial_hit = utils.initial_hit;
-
 
 /**
  * This variable keeps track of whether or not the browser supports
@@ -81,7 +65,6 @@ exports.current_state = null;
 
 exports.set_called = false;
 
-
 /**
  * This is set to true when the initial page request is to an unknown URL
  * rewrite target (such as a static .html page). This tells duality whether to
@@ -91,43 +74,46 @@ exports.set_called = false;
 
 exports.unknown_target = false;
 
-
-if (typeof window !== 'undefined') {
-    if (!window.console) {
+if( typeof window !== 'undefined') {
+    if(!window.console) {
         // console.log is going to cause errors, just stub the functions
         // for now. TODO: add logging utility for IE?
         window.console = {
-            log: function () {},
-            error: function () {},
-            info: function () {},
-            warn: function () {}
+            log : function() {
+            },
+            error : function() {
+            },
+            info : function() {
+            },
+            warn : function() {
+            }
         };
     }
     var console = window.console;
 }
 
-
 /**
  * Global functions required to match the CouchDB JavaScript environment.
  */
 
-if (typeof getRow === 'undefined' && typeof window !== 'undefined') {
-    window.getRow = function () {
+if( typeof getRow === 'undefined' && typeof window !== 'undefined') {
+    window.getRow = function() {
         return null;
     };
 }
-if (typeof start === 'undefined' && typeof window !== 'undefined') {
-    window.start = function (options) {};
+if( typeof start === 'undefined' && typeof window !== 'undefined') {
+    window.start = function(options) {
+    };
 }
-if (typeof send === 'undefined' && typeof window !== 'undefined') {
-    window.send = function (options) {};
+if( typeof send === 'undefined' && typeof window !== 'undefined') {
+    window.send = function(options) {
+    };
 }
-if (typeof log === 'undefined' && typeof window !== 'undefined') {
-    window.log = function () {
+if( typeof log === 'undefined' && typeof window !== 'undefined') {
+    window.log = function() {
         return console.log.apply(console, arguments);
     };
 }
-
 
 /**
  * Used to store userCtx, periodically updated like on session.login and
@@ -137,28 +123,25 @@ if (typeof log === 'undefined' && typeof window !== 'undefined') {
 // TODO: added to utils to avoid circular dependency bug in couchdb
 //exports.userCtx = utils.userCtx;
 
-
 exports._rewrites = [];
 exports._shows = {};
 exports._lists = {};
 exports._updates = {};
 
-
 function loadDeps(deps) {
     // TODO: ignore deps already merged in
-    if (!deps) {
+    if(!deps) {
         return;
     }
-    for (var k in deps) {
+    for(var k in deps) {
         var s = null;
         try {
             s = require('settings/packages/' + k);
-        }
-        catch (e) {
+        } catch (e) {
             // no settings, skip
         }
-        if (s) {
-            if (s.load) {
+        if(s) {
+            if(s.load) {
                 var a = require(s.load);
                 // should these always be concatenated?
                 // TODO: this behaves differently to the build steps which only
@@ -176,7 +159,6 @@ function loadDeps(deps) {
     }
 }
 
-
 // load root app
 var tmp = {};
 tmp[settings.name] = null;
@@ -187,37 +169,36 @@ loadDeps(settings.dependencies);
 
 exports._rewrites = _.flatten(exports._rewrites);
 
-
 /**
  * Called by duality.js once the design doc has been loaded.
  */
 
-exports.init = function () {
+exports.init = function() {
 
-    if (window.history && history.pushState) {
+    if(window.history && history.pushState) {
         exports.history_support = true;
 
-        $('form').live('submit', function (ev) {
+        $('form').live('submit', function(ev) {
             var action = $(this).attr('action');
             var method = $(this).attr('method').toUpperCase();
 
             // use current path if action path is mising
             action = urlParse(action);
-            if (!action.pathname) {
+            if(!action.pathname) {
                 action.pathname = urlParse(exports.getURL()).pathname;
             }
             action = urlFormat(action);
 
             // _session is a special case always available at the root url
-            if (action !== '/_session' && exports.isAppURL(action)) {
+            if(action !== '/_session' && exports.isAppURL(action)) {
                 var url = exports.appPath(action);
                 ev.preventDefault();
                 var fields = $(this).serializeArray();
                 var data = {};
-                for (var i = 0; i < fields.length; i++) {
+                for(var i = 0; i < fields.length; i++) {
                     data[fields[i].name] = fields[i].value;
                 }
-                if (method === 'GET' || method === 'HEAD') {
+                if(method === 'GET' || method === 'HEAD') {
                     var parsed = urlParse(url);
                     parsed.query = data;
                     data = {};
@@ -232,26 +213,25 @@ exports.init = function () {
             return false;
         });
 
-        $('a').live('click', function (ev) {
+        $('a').live('click', function(ev) {
             var href = $(this).attr('href');
             var rel = $(this).attr('rel');
 
-            if (/#[A-Za-z_\-:\.]+/.test(href)) {
+            if(/#[A-Za-z_\-:\.]+/.test(href)) {
                 exports._in_page = true;
                 // in-page anchor
                 return;
             }
             console.log('no in-page anchor');
-            if (href && exports.isAppURL(href) && rel !== 'external') {
+            if(href && exports.isAppURL(href) && rel !== 'external') {
                 var url = exports.appPath(href);
                 ev.preventDefault();
                 var match = exports.matchURL('GET', url);
-                if (/^_show\//.test(match.to) ||
-                    /^_list\//.test(match.to) ||
-                    /^_update\//.test(match.to)) {
+                if(/^_show\//.test(match.to) || /^_list\//.test(match.to) || /^_update\//.test(match.to)) {
                     exports.setURL('GET', url, {});
-                }
-                else {
+                    
+                    //TODO should set data?
+                } else {
                     // unknown rewrite target, don't create history entry
                     // but open in a new window since the new page probably
                     // doesn't have pushstate support and will break the back
@@ -262,8 +242,8 @@ exports.init = function () {
             }
         });
 
-        window.onpopstate = function (ev) {
-            if (exports._in_page) {
+        window.onpopstate = function(ev) {
+            if(exports._in_page) {
                 exports._in_page = false;
                 // let the browser handle in-page anchors
                 return;
@@ -274,18 +254,13 @@ exports.init = function () {
             var data = state.data;
             var count = state.history_count;
 
-            if (method !== 'GET' && method !== 'HEAD') {
+            if(method !== 'GET' && method !== 'HEAD') {
                 // unsafe method, unless caused by an explicit call to setURL
                 // show a confirmation dialog
-                if (!exports.set_called) {
+                if(!exports.set_called) {
                     // TODO: at this point is it too late to undo the popstate?
-                    var resend = confirm(
-                        'In order to complete this request the browser will ' +
-                        'have to re-send information, repeating any ' +
-                        'previous action (such as creating a document).\n\n' +
-                        'Re-send information?'
-                    );
-                    if (!resend) {
+                    var resend = confirm('In order to complete this request the browser will ' + 'have to re-send information, repeating any ' + 'previous action (such as creating a document).\n\n' + 'Re-send information?');
+                    if(!resend) {
                         var curr_count = exports.current_state.history_count;
                         window.history.go(curr_count - count);
                         return;
@@ -296,25 +271,21 @@ exports.init = function () {
             exports.set_called = false;
 
             var curr = exports.current_state;
-            if (curr &&
-                curr.url === url &&
-                curr.timestamp === state.timestamp &&
-                (curr.method || 'GET') === (state.method || 'GET')) {
+            if(curr && curr.url === url && curr.timestamp === state.timestamp && (curr.method || 'GET') === (state.method || 'GET')) {
                 // duplicate popstate event
                 return;
             }
             exports.current_state = {
-                method: method,
-                url: url,
-                data: data,
-                timestamp: state.timestamp,
-                history_count: count
+                method : method,
+                url : url,
+                data : data,
+                timestamp : state.timestamp,
+                history_count : count
             };
             exports.handle(method, url, data);
         };
         window.onpopstate({});
-    }
-    else {
+    } else {
         // This browser has no html5  history support, attempt to
         // enhance the page anyway
         // TODO: figure out the data from the initial request as this
@@ -333,7 +304,6 @@ exports.init = function () {
     events.emit('init');
 };
 
-
 /**
  * Extracts groups from a url, eg:
  * '/some/path' with pattern '/some/:name' -> {name: 'path'}
@@ -345,23 +315,21 @@ exports.init = function () {
  * @api public
  */
 
-exports.rewriteGroups = function (pattern, url) {
+exports.rewriteGroups = function(pattern, url) {
     var pathname = urlParse(url).pathname;
-    var re = new RegExp(
-        '^' + pattern.replace(/:\w+/g, '([^/]+)').replace(/\*/g, '.*') + '$'
-    );
+    var re = new RegExp('^' + pattern.replace(/:\w+/g, '([^/]+)').replace(/\*/g, '.*') + '$');
     var m = re.exec(pathname);
-    if (!m) {
+    if(!m) {
         return [];
     }
     var values = m.slice(1);
     var keys = [];
     var matches = pattern.match(/:\w+/g) || [];
-    for (var i = 0; i < matches.length; i++) {
+    for(var i = 0; i < matches.length; i++) {
         keys.push(matches[i].substr(1));
     }
     var groups = {};
-    for (var j = 0; j < keys.length; j++) {
+    for(var j = 0; j < keys.length; j++) {
         groups[keys[j]] = values[j];
     }
     return groups;
@@ -377,17 +345,16 @@ exports.rewriteGroups = function (pattern, url) {
  * @api public
  */
 
-exports.rewriteSplat = function (pattern, url) {
+exports.rewriteSplat = function(pattern, url) {
     // splats are only supported at the end of a rewrite pattern
-    if (pattern.charAt(pattern.length - 1) === '*') {
+    if(pattern.charAt(pattern.length - 1) === '*') {
         var re = new RegExp(pattern.substr(0, pattern.length - 1) + '(.*)');
         var match = re.exec(url);
-        if (match) {
+        if(match) {
             return match[1];
         }
     }
 };
-
 
 /**
  * Attempts to match rewrite from patterns to a URL, returning the
@@ -400,17 +367,17 @@ exports.rewriteSplat = function (pattern, url) {
  * @api public
  */
 
-exports.matchURL = function (method, url) {
+exports.matchURL = function(method, url) {
     var pathname = urlParse(url).pathname;
     var rewrites = exports._rewrites;
-    for (var i = 0; i < rewrites.length; i++) {
+    for(var i = 0; i < rewrites.length; i++) {
         var r = rewrites[i];
-        if (!r.method || method === r.method) {
+        if(!r.method || method === r.method) {
             var from = r.from;
             from = from.replace(/\*$/, '(.*)');
             from = from.replace(/:\w+/g, '([^/]+)');
             var re = new RegExp('^' + from + '$');
-            if (re.test(pathname)) {
+            if(re.test(pathname)) {
                 return r;
             }
         }
@@ -429,43 +396,41 @@ exports.matchURL = function (method, url) {
  * @api public
  */
 
-exports.replaceGroups = function (val, groups, splat) {
+exports.replaceGroups = function(val, groups, splat) {
     var k, match, result = val;
 
-    if (typeof val === 'string') {
+    if( typeof val === 'string') {
         result = val.split('/');
-        for (var i = 0; i < result.length; i++) {
+        for(var i = 0; i < result.length; i++) {
             match = false;
-            for (k in groups) {
-                if (result[i] === ':' + k) {
+            for(k in groups) {
+                if(result[i] === ':' + k) {
                     result[i] = decodeURIComponent(groups[k]);
                     match = true;
                 }
             }
-            if (!match && result[i] === '*') {
+            if(!match && result[i] === '*') {
                 result[i] = splat;
             }
         }
         result = result.join('/');
-    }
-    else if (val.length) {
+    } else if(val.length) {
         result = val.slice();
-        for (var j = 0; j < val.length; j++) {
+        for(var j = 0; j < val.length; j++) {
             match = false;
-            for (k in groups) {
-                if (val[j] === ':' + k) {
+            for(k in groups) {
+                if(val[j] === ':' + k) {
                     result[j] = decodeURIComponent(groups[k]);
                     match = true;
                 }
             }
-            if (!match && val[j] === '*') {
+            if(!match && val[j] === '*') {
                 result[j] = splat;
             }
         }
     }
     return result;
 };
-
 
 /**
  * Creates a new request object from a url and matching rewrite object.
@@ -480,20 +445,20 @@ exports.replaceGroups = function (val, groups, splat) {
  * @api public
  */
 
-exports.createRequest = function (method, url, data, match, callback) {
+exports.createRequest = function(method, url, data, match, callback) {
     var groups = exports.rewriteGroups(match.from, url);
     var query = urlParse(url, true).query || {};
     var k;
-    if (match.query) {
-        for (k in match.query) {
-            if (match.query.hasOwnProperty(k)) {
+    if(match.query) {
+        for(k in match.query) {
+            if(match.query.hasOwnProperty(k)) {
                 query[k] = exports.replaceGroups(match.query[k], groups);
             }
         }
     }
-    if (groups) {
-        for (k in groups) {
-            if (groups.hasOwnProperty(k)) {
+    if(groups) {
+        for(k in groups) {
+            if(groups.hasOwnProperty(k)) {
                 query[k] = decodeURIComponent(groups[k]);
             }
         }
@@ -504,31 +469,30 @@ exports.createRequest = function (method, url, data, match, callback) {
     var splat = exports.rewriteSplat(match.from, url);
     var to = exports.replaceGroups(match.to, query, splat);
     var req = {
-        method: method,
-        query: query,
-        headers: {},
-        path: to.split('/'),
-        client: true,
-        initial_hit: utils.initial_hit,
-        cookie: cookies.readBrowserCookies()
+        method : method,
+        query : query,
+        headers : {},
+        path : to.split('/'),
+        client : true,
+        initial_hit : utils.initial_hit,
+        cookie : cookies.readBrowserCookies()
     };
-    if (data) {
+    if(data) {
         req.form = data;
     }
 
-    db.newUUID(100, function (err, uuid) {
-        if (err) {
+    db.newUUID(100, function(err, uuid) {
+        if(err) {
             return callback(err);
         }
         req.uuid = uuid;
 
-        if (utils.userCtx) {
+        if(utils.userCtx) {
             req.userCtx = utils.userCtx;
             return callback(null, req);
-        }
-        else {
-            session.info(function (err, session) {
-                if (err) {
+        } else {
+            session.info(function(err, session) {
+                if(err) {
                     return callback(err);
                 }
                 req.userCtx = session.userCtx;
@@ -538,32 +502,29 @@ exports.createRequest = function (method, url, data, match, callback) {
     });
 };
 
-
 /**
  * Handles return values from show / list / update functions
  */
 
-exports.handleResponse = function (req, res) {
-    if (req && typeof res === 'object') {
-        if (res.headers) {
-            if (res.headers['Set-Cookie']) {
+exports.handleResponse = function(req, res) {
+    if(req && typeof res === 'object') {
+        if(res.headers) {
+            if(res.headers['Set-Cookie']) {
                 document.cookie = res.headers['Set-Cookie'];
             }
             var loc = res.headers['Location'];
-            if (loc && _.indexOf([301, 302, 303, 307], res.code) !== -1) {
-                if (exports.isAppURL(loc)) {
+            if(loc && _.indexOf([301, 302, 303, 307], res.code) !== -1) {
+                if(exports.isAppURL(loc)) {
                     // reset method to GET unless response is a 307
-                    var method = res.code === 307 ? req.method || 'GET': 'GET';
+                    var method = res.code === 307 ? req.method || 'GET' : 'GET';
                     exports.setURL(method, exports.appPath(loc));
-                }
-                else {
+                } else {
                     document.location = loc;
                 }
             }
         }
     }
 };
-
 
 /**
  * Fetches the relevant document and calls the named show function.
@@ -576,61 +537,54 @@ exports.handleResponse = function (req, res) {
  * @api public
  */
 
-exports.runShowBrowser = function (req, name, docid, callback) {
+exports.runShowBrowser = function(req, name, docid, callback) {
     var result;
     var fn = exports._shows[name];
-    if (!fn) {
+    if(!fn) {
         throw new Error('Unknown show function: ' + name);
     }
 
     var info = {
-        type: 'show',
-        name: name,
-        target: docid,
-        query: req.query,
-        fn: fn
+        type : 'show',
+        name : name,
+        target : docid,
+        query : req.query,
+        fn : fn
     };
     events.emit('beforeResource', info, req);
 
-    if (docid) {
+    if(docid) {
         var appdb = db.use(exports.getDBURL(req));
-        appdb.getDoc(docid, req.query, function (err, doc) {
+        appdb.getDoc(docid, req.query, function(err, doc) {
             var current_req = (utils.currentRequest() || {});
-            if (current_req.uuid === req.uuid) {
-                if (err) {
+            if(current_req.uuid === req.uuid) {
+                if(err) {
                     return callback(err);
                 }
                 var res = exports.runShow(fn, doc, req);
                 events.emit('afterResponse', info, req, res);
-                if (res) {
+                if(res) {
                     exports.handleResponse(req, res);
-                }
-                else {
+                } else {
                     // returned without response, meaning cookies won't be set
                     // by handleResponseHeaders
-                    if (flashmessages && req.outgoing_flash_messages) {
-                        flashmessages.setCookieBrowser(
-                            req, req.outgoing_flash_messages
-                        );
+                    if(flashmessages && req.outgoing_flash_messages) {
+                        flashmessages.setCookieBrowser(req, req.outgoing_flash_messages);
                     }
                 }
                 callback();
             }
         });
-    }
-    else {
+    } else {
         var res = exports.runShow(fn, null, req);
         events.emit('afterResponse', info, req, res);
-        if (res) {
+        if(res) {
             exports.handleResponse(req, res);
-        }
-        else {
+        } else {
             // returned without response, meaning cookies won't be set by
             // handleResponseHeaders
-            if (flashmessages && req.outgoing_flash_messages) {
-                flashmessages.setCookieBrowser(
-                    req, req.outgoing_flash_messages
-                );
+            if(flashmessages && req.outgoing_flash_messages) {
+                flashmessages.setCookieBrowser(req, req.outgoing_flash_messages);
             }
         }
         callback();
@@ -646,120 +600,82 @@ exports.runShowBrowser = function (req, name, docid, callback) {
  * @api public
  */
 
-exports.parseResponse = function (req, res) {
+exports.parseResponse = function(req, res) {
     var ids = _.without(_.keys(res), 'title', 'code', 'headers', 'body');
-    if (req.client) {
-        if (res.title) {
+    if(req.client) {
+        if(res.title) {
             document.title = res.title;
         }
-        _.each(ids, function (id) {
+        _.each(ids, function(id) {
             $('#' + id).html(res[id]);
         });
-        /**
-         * Used this way to inject so head & other stuff not included?
-         * 
-         */
-    }
-    else if (!res.body) {
-        var context = {title: res.title || ''};
-        _.each(ids, function (id) {
+    } else if(!res.body) {
+        var context = {
+            title : res.title || ''
+        };
+        _.each(ids, function(id) {
             context[id] = res[id];
         });
-        if (!templates) {
-            throw new Error(
-                'Short-hand response style requires template module'
-            );
+        if(!templates) {
+            throw new Error('Short-hand response style requires template module');
         }
         var body = templates.render(BASE_TEMPLATE, req, context);
         res = {
-            body: body,
-            code: res.code || 200,
-            headers: res.headers
+            body : body,
+            code : res.code || 200,
+            headers : res.headers
         };
     }
+    log("render base.html" + "sessionChange- utils:" + utils.userCtx + "currentRequest:" + "ss");
+    log("CR")
+    log(utils.currentRequest())
+    log("lang")
+    log(utils.currentRequest().query.setLng);
+
+    var i18n = require('i18next-node-kanso');
+    // log("detect by i18" + i18n.detectLanguage())
+    // i18n.init({})
+
     return {
-        body: res.body,
-        code: res.code,
-        headers: res.headers
+        body : res.body,
+        code : res.code,
+        headers : res.headers
     };
 };
 
-/**
- * Runs a show function with the given document and request object,
- * emitting relevant events. This function runs both server and client-side.
- *
- * @name runShow(fn, doc, req)
- * @param {Function} fn
- * @param {Object} doc
- * @param {Object} req
- * @api public
- */
-
-exports.parseResponse = function (req, res) {
-    var ids = _.without(_.keys(res), 'title', 'code', 'headers', 'body');
-    if (req.client) {
-        if (res.title) {
-            document.title = res.title;
-        }
-        _.each(ids, function (id) {
-            $('#' + id).html(res[id]);
-        });
-    }
-    else if (!res.body) {
-        var context = {title: res.title || ''};
-        _.each(ids, function (id) {
-            context[id] = res[id];
-        });
-        if (!templates) {
-            throw new Error(
-                'Short-hand response style requires templates module'
-            );
-        }
-        var body = templates.render(BASE_TEMPLATE, req, context);
-        res = {
-            body: body,
-            code: res.code || 200,
-            headers: res.headers
-        };
-    }
-    return {
-        body: res.body,
-        code: res.code,
-        headers: res.headers
-    };
-};
-
-exports.runShow = function (fn, doc, req) {
-    if (flashmessages) {
+exports.runShow = function(fn, doc, req) {
+    if(flashmessages) {
         req = flashmessages.updateRequest(req);
     }
     utils.currentRequest(req);
     var info = {
-        type: 'show',
-        name: req.path[1],
-        target: req.path[2],
-        query: req.query,
-        fn: fn
+        type : 'show',
+        name : req.path[1],
+        target : req.path[2],
+        query : req.query,
+        fn : fn
     };
     events.emit('beforeRequest', info, req);
     var res = fn(doc, req);
 
-    if (!(res instanceof Object)) {
-        res = {code: 200, body: res};
-    }
-    else {
+    if(!( res instanceof Object)) {
+        res = {
+            code : 200,
+            body : res
+        };
+    } else {
         res = exports.parseResponse(req, res);
     }
     events.emit('beforeResponseStart', info, req, res);
     events.emit('beforeResponseData', info, req, res, res.body || '');
 
-    if (flashmessages) {
+    if(flashmessages) {
         res = flashmessages.updateResponse(req, res);
     } else {
         // set the baseURL cookie for the browser
         var baseURL = utils.getBaseURL(req);
         cookies.setResponseCookie(req, res, {
-            name: 'baseURL',
+            name : 'baseURL',
             value : baseURL,
             path : baseURL
         });
@@ -779,70 +695,63 @@ exports.runShow = function (fn, doc, req) {
  * @api public
  */
 
-exports.runUpdateBrowser = function (req, name, docid, callback) {
+exports.runUpdateBrowser = function(req, name, docid, callback) {
     var result;
     var fn = exports._updates[name];
-    if (!fn) {
+    if(!fn) {
         throw new Error('Unknown update function: ' + name);
     }
 
     var info = {
-        type: 'update',
-        name: name,
-        target: docid,
-        query: req.query,
-        fn: fn
+        type : 'update',
+        name : name,
+        target : docid,
+        query : req.query,
+        fn : fn
     };
     events.emit('beforeResource', info, req);
 
-    if (docid) {
+    if(docid) {
         var appdb = db.use(exports.getDBURL(req));
-        appdb.getDoc(docid, req.query, function (err, doc) {
+        appdb.getDoc(docid, req.query, function(err, doc) {
             var current_req = (utils.currentRequest() || {});
-            if (current_req.uuid === req.uuid) {
-                if (err) {
+            if(current_req.uuid === req.uuid) {
+                if(err) {
                     return callback(err);
                 }
-                exports.runUpdate(fn, doc, req, function (err, res) {
-                    if (err) {
+                exports.runUpdate(fn, doc, req, function(err, res) {
+                    if(err) {
                         events.emit('updateFailure', err, info, req, res, doc);
                         return callback(err);
                     }
                     events.emit('afterResponse', info, req, res);
-                    if (res) {
+                    if(res) {
                         exports.handleResponse(req, res[1]);
-                    }
-                    else {
+                    } else {
                         // returned without response, meaning cookies won't be
                         // set by handleResponseHeaders
-                        if (flashmessages && req.outgoing_flash_messages) {
-                            flashmessages.setCookieBrowser(
-                                req, req.outgoing_flash_messages
-                            );
+                        if(flashmessages && req.outgoing_flash_messages) {
+                            flashmessages.setCookieBrowser(req, req.outgoing_flash_messages);
                         }
                     }
                     callback();
                 });
             }
         });
-    }
-    else {
-        exports.runUpdate(fn, null, req, function (err, res) {
-            if (err) {
+    } else {
+        exports.runUpdate(fn, null, req, function(err, res) {
+            if(err) {
                 events.emit('updateFailure', err, info, req, res, null);
                 return callback(err);
             }
             events.emit('afterResponse', info, req, res);
-            if (res) {
+            if(res) {
                 exports.handleResponse(req, res[1]);
-            }
-            else {
+            } else {
                 // returned without response, meaning cookies won't be set by
                 // handleResponseHeaders
-                if (flashmessages && req.outgoing_flash_messages) {
-                    flashmessages.setCookieBrowser(
-                        req, req.outgoing_flash_messages
-                    );
+                if(flashmessages && req.outgoing_flash_messages) {
+                    flashmessages.setCookieBrowser(req, req.outgoing_flash_messages);
                 }
             }
             callback();
@@ -861,59 +770,59 @@ exports.runUpdateBrowser = function (req, name, docid, callback) {
  * @api public
  */
 
-exports.runUpdate = function (fn, doc, req, cb) {
-    if (flashmessages) {
+exports.runUpdate = function(fn, doc, req, cb) {
+    if(flashmessages) {
         req = flashmessages.updateRequest(req);
     }
     utils.currentRequest(req);
     var info = {
-        type: 'update',
-        name: req.path[1],
-        target: req.path[2],
-        query: req.query,
-        fn: fn
+        type : 'update',
+        name : req.path[1],
+        target : req.path[2],
+        query : req.query,
+        fn : fn
     };
     events.emit('beforeRequest', info, req);
     var val = fn(doc, req);
 
-    var res = val ? val[1]: null;
-    if (!(res instanceof Object)) {
-        res = {code: 200, body: res};
-    }
-    else {
+    var res = val ? val[1] : null;
+    if(!( res instanceof Object)) {
+        res = {
+            code : 200,
+            body : res
+        };
+    } else {
         res = exports.parseResponse(req, res);
     }
     events.emit('beforeResponseStart', info, req, res);
     events.emit('beforeResponseData', info, req, res, res.body || '');
 
-    if (flashmessages) {
+    if(flashmessages) {
         res = flashmessages.updateResponse(req, res);
     } else {
-            // set the baseURL cookie for the browser
-            var baseURL = utils.getBaseURL(req);
-            cookies.setResponseCookie(req, res, {
-                name: 'baseURL',
-                value : baseURL,
-                path : baseURL
-            });
+        // set the baseURL cookie for the browser
+        var baseURL = utils.getBaseURL(req);
+        cookies.setResponseCookie(req, res, {
+            name : 'baseURL',
+            value : baseURL,
+            path : baseURL
+        });
     }
-    var r = [val ? val[0]: null, res];
-    if (req.client && r[0]) {
+    var r = [ val ? val[0] : null, res];
+    if(req.client && r[0]) {
         var appdb = db.use(exports.getDBURL(req));
-        appdb.saveDoc(r[0], function (err, res) {
-            if (err) {
+        appdb.saveDoc(r[0], function(err, res) {
+            if(err) {
                 return cb(err);
             }
             req.response_received = true;
             cb(null, r);
         });
-    }
-    else {
+    } else {
         req.response_received = true;
         cb(null, r);
     }
 };
-
 
 /**
  * Creates a fake head object from view results for passing to a list function
@@ -925,16 +834,15 @@ exports.runUpdate = function (fn, doc, req, cb) {
  * @api public
  */
 
-exports.createHead = function (data) {
+exports.createHead = function(data) {
     var head = {};
-    for (var k in data) {
-        if (k !== 'rows') {
+    for(var k in data) {
+        if(k !== 'rows') {
             head[k] = data[k];
         }
     }
     return head;
 };
-
 
 /**
  * Fetches the relevant view and calls the named list function with the results.
@@ -947,53 +855,50 @@ exports.createHead = function (data) {
  * @api public
  */
 
-exports.runListBrowser = function (req, name, view, callback) {
+exports.runListBrowser = function(req, name, view, callback) {
     var fn = exports._lists[name];
-    if (!fn) {
+    if(!fn) {
         throw new Error('Unknown list function: ' + name);
     }
 
     var info = {
-        type: 'list',
-        name: name,
-        target: view,
-        query: req.query,
-        fn: fn
+        type : 'list',
+        name : name,
+        target : view,
+        query : req.query,
+        fn : fn
     };
     events.emit('beforeResource', info, req);
 
-    if (view) {
+    if(view) {
         // update_seq used in head parameter passed to list function
         req.query.update_seq = true;
         var appdb = db.use(exports.getDBURL(req));
-        appdb.getView(settings.name, view, req.query, function (err, data) {
+        appdb.getView(settings.name, view, req.query, function(err, data) {
             var current_req = (utils.currentRequest() || {});
-            if (current_req.uuid === req.uuid) {
-                if (err) {
+            if(current_req.uuid === req.uuid) {
+                if(err) {
                     return callback(err);
                 }
-                getRow = function () {
+                getRow = function() {
                     return data.rows.shift();
                 };
-                start = function (res) {
+                start = function(res) {
                     exports.handleResponse(req, res);
                 };
                 var head = exports.createHead(data);
                 var res = exports.runList(fn, head, req);
                 events.emit('afterResponse', info, req, res);
-                if (res) {
+                if(res) {
                     exports.handleResponse(req, res);
-                }
-                else {
+                } else {
                     // returned without response, meaning cookies won't be set
                     // by handleResponseHeaders
-                    if (flashmessages && req.outgoing_flash_messages) {
-                        flashmessages.setCookieBrowser(
-                            req, req.outgoing_flash_messages
-                        );
+                    if(flashmessages && req.outgoing_flash_messages) {
+                        flashmessages.setCookieBrowser(req, req.outgoing_flash_messages);
                     }
                 }
-                getRow = function () {
+                getRow = function() {
                     return null;
                 };
                 callback();
@@ -1003,10 +908,9 @@ exports.runListBrowser = function (req, name, view, callback) {
     // TODO: check if it should throw here
     else {
         var e = new Error('no view specified');
-        if (callback) {
+        if(callback) {
             callback(e);
-        }
-        else {
+        } else {
             throw e;
         }
     }
@@ -1023,43 +927,43 @@ exports.runListBrowser = function (req, name, view, callback) {
  * @api public
  */
 
-exports.runList = function (fn, head, req) {
-    if (flashmessages) {
+exports.runList = function(fn, head, req) {
+    if(flashmessages) {
         req = flashmessages.updateRequest(req);
     }
     utils.currentRequest(req);
     var info = {
-        type: 'list',
-        name: req.path[1],
-        target: req.path[2],
-        query: req.query,
-        fn: fn
+        type : 'list',
+        name : req.path[1],
+        target : req.path[2],
+        query : req.query,
+        fn : fn
     };
     // cache response from start call
     var start_res;
     var _start = start;
-    start = function (res) {
+    start = function(res) {
         start_res = res;
         events.emit('beforeResponseStart', info, req, res);
-        if (res.body) {
+        if(res.body) {
             events.emit('beforeResponseData', info, req, res, res.body);
         }
-        if (flashmessages) {
+        if(flashmessages) {
             res = flashmessages.updateResponse(req, res);
         } else {
-                // set the baseURL cookie for the browser
-                var baseURL = utils.getBaseURL(req);
-                cookies.setResponseCookie(req, res, {
-                    name: 'baseURL',
-                    value : baseURL,
-                    path : baseURL
-                });
+            // set the baseURL cookie for the browser
+            var baseURL = utils.getBaseURL(req);
+            cookies.setResponseCookie(req, res, {
+                name : 'baseURL',
+                value : baseURL,
+                path : baseURL
+            });
         }
         _start(res);
     };
     var _send = send;
-    send = function (data) {
-        if (!start_res.body) {
+    send = function(data) {
+        if(!start_res.body) {
             start_res.body = '';
         }
         // TODO: does it make sense to store data here and use up memory
@@ -1071,18 +975,20 @@ exports.runList = function (fn, head, req) {
     events.emit('beforeRequest', info, req);
     var val = fn(head, req);
 
-    if (val instanceof Object) {
+    if( val instanceof Object) {
         val = exports.parseResponse(req, val).body;
     }
-    if (!start_res) {
-        start_res = {code: 200, body: val};
+    if(!start_res) {
+        start_res = {
+            code : 200,
+            body : val
+        };
         events.emit('beforeResponseStart', info, req, start_res);
         events.emit('beforeResponseData', info, req, start_res, val);
         start = _start;
         send = _send;
-    }
-    else {
-        start_res.body = start_res.body ? start_res.body + val: val;
+    } else {
+        start_res.body = start_res.body ? start_res.body + val : val;
         events.emit('beforeResponseData', info, req, start_res, val);
     }
     start = _start;
@@ -1090,7 +996,6 @@ exports.runList = function (fn, head, req) {
     req.response_received = true;
     return val;
 };
-
 
 /**
  * Creates a request object for the url and runs appropriate show, list or
@@ -1103,76 +1008,63 @@ exports.runList = function (fn, head, req) {
  * @api public
  */
 
-exports.handle = function (method, url, data) {
-    if (exports.unknown_target) {
+exports.handle = function(method, url, data) {
+    if(exports.unknown_target) {
         // if we're currently on an unknown rewrite target page (such as a
         // static .html file), don't attempt to intercept the request
         window.location = exports.getBaseURL() + url;
         return;
     }
     var match = exports.matchURL(method, url);
-    if (match) {
+    if(match) {
         var parsed = urlParse(url);
-        exports.createRequest(method, url, data, match, function (err, req) {
-            if (err) {
+        exports.createRequest(method, url, data, match, function(err, req) {
+            if(err) {
                 throw err;
             }
-            var msg = method + ' ' + url + ' -> ' +
-                JSON.stringify(req.path.join('/')) + ' ' +
-                JSON.stringify(req.query);
+            var msg = method + ' ' + url + ' -> ' + JSON.stringify(req.path.join('/')) + ' ' + JSON.stringify(req.query);
 
-            if (data) {
+            if(data) {
                 msg += ' data: ' + JSON.stringify(data);
             }
 
             console.log(msg);
             utils.currentRequest(req);
 
-            var after = function () {
-                if (parsed.hash) {
+            var after = function() {
+                if(parsed.hash) {
                     // we have to handle in-page anchors manually because we've
                     // hijacked the hash part of the url
                     // TODO: don't re-handle the page if only the hash has
                     // changed
 
                     // test if a valid element name or id
-                    if (/#[A-Za-z_\-:\.]+/.test(parsed.hash)) {
+                    if(/#[A-Za-z_\-:\.]+/.test(parsed.hash)) {
                         var el = $(parsed.hash);
-                        if (el.length) {
+                        if(el.length) {
                             window.scrollTo(0, el.offset().top);
                         }
-                    }
-                    else if (parsed.hash === '#') {
+                    } else if(parsed.hash === '#') {
                         // scroll to top of page
                         window.scrollTo(0, 0);
                     }
                     // TODO: handle invalid values?
-                }
-                else if (!utils.initial_hit) {
+                } else if(!utils.initial_hit) {
                     window.scrollTo(0, 0);
                 }
             };
 
             var src, fn, name;
 
-            if (req.path[0] === '_show') {
-                exports.runShowBrowser(
-                    req, req.path[1], req.path.slice(2).join('/'), after
-                );
-            }
-            else if (req.path[0] === '_list') {
-                exports.runListBrowser(
-                    req, req.path[1], req.path.slice(2).join('/'), after
-                );
-            }
-            else if (req.path[0] === '_update') {
-                exports.runUpdateBrowser(
-                    req, req.path[1], req.path.slice(2).join('/'), after
-                );
-            }
-            else {
+            if(req.path[0] === '_show') {
+                exports.runShowBrowser(req, req.path[1], req.path.slice(2).join('/'), after);
+            } else if(req.path[0] === '_list') {
+                exports.runListBrowser(req, req.path[1], req.path.slice(2).join('/'), after);
+            } else if(req.path[0] === '_update') {
+                exports.runUpdateBrowser(req, req.path[1], req.path.slice(2).join('/'), after);
+            } else {
                 console.log('Unknown rewrite target: ' + req.path.join('/'));
-                if (!utils.initial_hit) {
+                if(!utils.initial_hit) {
                     var newurl = exports.getBaseURL() + url;
                     console.log('Opening new window for: ' + newurl);
                     // reset url
@@ -1180,20 +1072,14 @@ exports.handle = function (method, url, data) {
                     // open in new window, since this page is unlikely to have
                     // pushstate support and would break the back button
                     window.open(newurl);
-                }
-                else {
+                } else {
                     exports.unknown_target = true;
-                    console.log(
-                        'Initial hit is an uknown rewrite target, duality ' +
-                        'will not fetch from server in order to avoid ' +
-                        'redirect loop'
-                    );
+                    console.log('Initial hit is an uknown rewrite target, duality ' + 'will not fetch from server in order to avoid ' + 'redirect loop');
                 }
             }
             utils.initial_hit = false;
         });
-    }
-    else {
+    } else {
         console.log(method + ' ' + url + ' -> [404]');
         window.location = exports.getBaseURL() + url;
         return;
@@ -1205,11 +1091,10 @@ exports.handle = function (method, url, data) {
      * track a page view. This is done consistently for hash-based
      * and pushState urls
      */
-    if (window.pageTracker && !utils.initial_hit) {
+    if(window.pageTracker && !utils.initial_hit) {
         pageTracker._trackPageview(url);
     }
 };
-
 
 /**
  * Add a history entry for the given url, prefixed with the baseURL for the app.
@@ -1221,13 +1106,13 @@ exports.handle = function (method, url, data) {
  * @api public
  */
 
-exports.setURL = function (method, url, data) {
+exports.setURL = function(method, url, data) {
     var fullurl = exports.getBaseURL() + url;
     var state = {
-        method: method,
-        data: data,
-        timestamp: new Date().getTime(),
-        history_count: window.history.length + 1
+        method : method,
+        data : data,
+        timestamp : new Date().getTime(),
+        history_count : window.history.length + 1
     };
     // this is the result of a direct call to setURL
     // (don't show confirmation dialog for unsafe states needing to re-submit)
@@ -1245,20 +1130,20 @@ exports.setURL = function (method, url, data) {
      */
 
     var curr_state = exports.current_state;
-    var curr_method = curr_state ? (curr_state.method || 'GET'): 'GET';
+    var curr_method = curr_state ? (curr_state.method || 'GET') : 'GET';
 
-    if (curr_method !== 'GET' && curr_method !== 'HEAD') {
+    if(curr_method !== 'GET' && curr_method !== 'HEAD') {
         // unsafe method on current request, replace it
         window.history.replaceState(state, document.title, fullurl);
-    }
-    else {
+    } else {
         // last request was safe, add a new entry in the history
         window.history.pushState(state, document.title, fullurl);
     }
     // manually fire popstate event
-    window.onpopstate({state: state});
+    window.onpopstate({
+        state : state
+    });
 };
-
 
 /**
  * This was moved to utils to avoid a circular dependency between
@@ -1269,10 +1154,9 @@ exports.setURL = function (method, url, data) {
 
 exports.getBaseURL = utils.getBaseURL;
 
-exports.getDBURL = function (req) {
+exports.getDBURL = function(req) {
     return exports.getBaseURL(req) + '/_db';
 };
-
 
 /**
  * Gets the current app-level URL (without baseURL prefix).
@@ -1282,7 +1166,7 @@ exports.getDBURL = function (req) {
  * @api public
  */
 
-exports.getAppURL = function () {
+exports.getAppURL = function() {
     return exports.appPath(exports.getURL());
 };
 
@@ -1294,10 +1178,9 @@ exports.getAppURL = function () {
  * @api public
  */
 
-exports.getURL = function () {
+exports.getURL = function() {
     return '' + window.location;
 };
-
 
 /**
  * Tests if two urls are of the same origin. Accepts parsed url objects
@@ -1310,17 +1193,14 @@ exports.getURL = function () {
  * @api public
  */
 
-exports.sameOrigin = function (a, b) {
-    var ap = (typeof a === 'string') ? urlParse(a): a;
-    var bp = (typeof b === 'string') ? urlParse(b): b;
+exports.sameOrigin = function(a, b) {
+    var ap = ( typeof a === 'string') ? urlParse(a) : a;
+    var bp = ( typeof b === 'string') ? urlParse(b) : b;
     // if one url is relative to current origin, return true
-    if (ap.protocol === undefined || bp.protocol === undefined) {
+    if(ap.protocol === undefined || bp.protocol === undefined) {
         return true;
     }
-    return (
-        ap.protocol === bp.protocol &&
-        ap.hostname === bp.hostname &&
-        ap.port === bp.port
+    return (ap.protocol === bp.protocol && ap.hostname === bp.hostname && ap.port === bp.port
     );
 };
 
@@ -1334,14 +1214,13 @@ exports.sameOrigin = function (a, b) {
  * @api public
  */
 
-exports.appPath = function (p) {
+exports.appPath = function(p) {
     // hash links need current URL prepending
-    if (p.charAt(0) === '#') {
+    if(p.charAt(0) === '#') {
         var newurl = urlParse(exports.getURL());
         newurl.hash = p;
         return exports.appPath(urlFormat(newurl));
-    }
-    else if (p.charAt(0) === '?') {
+    } else if(p.charAt(0) === '?') {
         // if the request is just a query, then prepend the current app path
         // as a browser would
         var newurl2 = urlParse(exports.getURL());
@@ -1350,29 +1229,26 @@ exports.appPath = function (p) {
         delete newurl2.href;
         newurl2.search = p;
         return exports.appPath(urlFormat(newurl2));
-    }
-    else if (/\w+:/.test(p)) {
+    } else if(/\w+:/.test(p)) {
         // include protocol
         var origin = p.split('/').slice(0, 3).join('/');
         // coerce window.location to a real string so we can use split in IE
         var loc = '' + window.location;
-        if (origin === loc.split('/').slice(0, 3).join('/')) {
+        if(origin === loc.split('/').slice(0, 3).join('/')) {
             // remove origin, set p to pathname only
             // IE often adds this to a tags, hence why we strip it out now
             p = p.substr(origin.length);
-        }
-        else {
+        } else {
             // not same origin, return original full path
             return p || '/';
         }
     }
     var base = exports.getBaseURL();
-    if (p.substr(0, base.length) === base) {
+    if(p.substr(0, base.length) === base) {
         return p.substr(base.length) || '/';
     }
     return p || '/';
 };
-
 
 /**
  * Used to decide whether to handle a link or not. Should detect app vs.
@@ -1384,31 +1260,30 @@ exports.appPath = function (p) {
  * @api public
  */
 
-exports.isAppURL = function (url) {
+exports.isAppURL = function(url) {
     // coerce window.location to a real string in IE
     var loc = '' + window.location;
     var base = exports.getBaseURL();
-    if (!exports.sameOrigin(url, loc)) {
+    if(!exports.sameOrigin(url, loc)) {
         return false;
     }
     var p = urlParse(url).pathname;
-    if (!p) {
+    if(!p) {
         return false;
     }
-    if (p.length < base.length) {
+    if(p.length < base.length) {
         return false;
     }
-    if (p.length === base.length) {
+    if(p.length === base.length) {
         return p === base;
     }
     return p.substr(0, base.length + 1) === base + '/';
 };
 
-
 // make sure currentRequest() always provided the latest session information
-events.on('sessionChange', function (userCtx, req) {
+events.on('sessionChange', function(userCtx, req) {
     var curr_req = utils.currentRequest();
-    if (curr_req) {
+    if(curr_req) {
         curr_req.userCtx = userCtx;
         utils.currentRequest(curr_req);
     }

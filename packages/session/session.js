@@ -184,13 +184,23 @@ exports.info = function (callback) {
         url: "/_session"
     },
     function (err, resp) {
+        console.log("asking DB for session");
+                console.log(resp);
+                console.log(exports.userCtx);
+        
+        log("server session")
         var oldUserCtx = exports.userCtx;
+                console.log("change0")
         exports.session = resp;
         exports.userCtx = (resp && resp.userCtx) || {name: null, roles: []};
         // TODO: should this check for differences in more than just name?
+        //YES!!
         if (!oldUserCtx || oldUserCtx.name !== exports.userCtx.name) {
-            exports.emit('change', exports.userCtx);
         }
+        console.log("change!")
+            exports.emit('change', exports.userCtx);
+        //Test with force change 
+        
         if (callback) {
             callback(err, resp);
         }

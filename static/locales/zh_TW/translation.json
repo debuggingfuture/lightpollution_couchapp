@@ -1,0 +1,10 @@
+{
+  "app": {
+    "name": "香港光害地圖"
+  },
+  "nav": {
+    "home": "Home",
+    "page1": "Page One",
+    "page2": "Page Two"
+  }
+}
