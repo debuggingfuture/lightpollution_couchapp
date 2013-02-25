@@ -5,10 +5,13 @@
 		<link href="{{baseURL}}/static/style/css/bootstrap.css" rel="stylesheet">
 		<link href="{{baseURL}}/static/style/css/bootstrap-responsive.css" rel="stylesheet">
 		<link href="{{baseURL}}/static/style/css/map.css" rel="stylesheet">
+		<link href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" rel="stylesheet">
+		
 		<script type="text/javascript"
 		src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAD0DuFfwB-m7JYCejyWCwkVFrRIvyH3RE&sensor=true"></script>
 		<!-- 		need explicit loading 1.4.2 for duality.js 1.9.2 not supproted?-->
 		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="//raw.github.com/imsky/holder/master/holder.js"></script>
 		<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js"></script>
 		<!-- 		<script src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-carousel.js"></script> -->
@@ -57,6 +60,9 @@
             // //Need to make sure it is finish before use it
 
             $().ready(function() {
+
+                var search = require("lib/search");
+                search.search_init();
                 // // "later"
                 // var x = $.t("app.name");
                 // //TODO write an unit test to check the translation ability
@@ -65,16 +71,14 @@
                 // // console.log(I18n.t("message"));
                 //
 
-                $("#search-form").submit(function() {
-
-                    console.log("register search helper");
-                })
             });
 
 		</script>
 	</head>
 	<body>
 		<div class="container">
+			<div id="search-result">
+			</div>
 			{{{include "navigation.html"}}}
 			<!-- 			Base{{baseURL}}
 			def{{a}}

@@ -178,10 +178,14 @@ exports.init = function() {
     if(window.history && history.pushState) {
         exports.history_support = true;
 
+        //TODO check exist
         $('form').live('submit', function(ev) {
             var action = $(this).attr('action');
             var method = $(this).attr('method').toUpperCase();
 
+            if(!action) {
+                action = ""
+            }
             // use current path if action path is mising
             action = urlParse(action);
             if(!action.pathname) {
@@ -229,7 +233,7 @@ exports.init = function() {
                 var match = exports.matchURL('GET', url);
                 if(/^_show\//.test(match.to) || /^_list\//.test(match.to) || /^_update\//.test(match.to)) {
                     exports.setURL('GET', url, {});
-                    
+
                     //TODO should set data?
                 } else {
                     // unknown rewrite target, don't create history entry

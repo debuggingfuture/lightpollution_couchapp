@@ -17,7 +17,12 @@ body {
 	color: white;
 	font-size: 20px;
 }
-
+.ui-autocomplete {
+	position: absolute;
+	top: 0;
+	left: 0;
+	cursor: default;
+}
 .btn-xlarge {
 	padding: 10px 16px;
 	font-size: 36px;
