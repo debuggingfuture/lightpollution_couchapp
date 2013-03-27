@@ -182,7 +182,11 @@ exports.init = function() {
         $('form').live('submit', function(ev) {
             var action = $(this).attr('action');
             var method = $(this).attr('method').toUpperCase();
-
+            /*
+             * FIXED: bug related to set as true whenever there is locallink
+             */
+            exports._in_page=false;
+            console.log("original")
             if(!action) {
                 action = ""
             }
@@ -206,18 +210,24 @@ exports.init = function() {
                     var parsed = urlParse(url);
                     parsed.query = data;
                     data = {};
-                    url = urlFormat(parsed);
+                    // url = urlFormat(parsed);
                 }
                 // TODO: should this post form data to a new window using
                 // target="_blank" if the action is to an unrecognized rewrite
                 // target?
                 exports.setURL(method, url, data);
+
             }
             ev.preventDefault();
-            return false;
+            
+            //callback
+           return false;
         });
 
-        $('a').live('click', function(ev) {
+        // $('a').live('click', function(ev) {
+            $(document).on('click','a',function(ev){
+                console.log("Using Duality function for link");
+            exports._in_page=false; //to fix some case default it is true
             var href = $(this).attr('href');
             var rel = $(this).attr('rel');
 
@@ -226,7 +236,7 @@ exports.init = function() {
                 // in-page anchor
                 return;
             }
-            console.log('no in-page anchor');
+            console.log('non in-page anchor');
             if(href && exports.isAppURL(href) && rel !== 'external') {
                 var url = exports.appPath(href);
                 ev.preventDefault();
@@ -245,7 +255,10 @@ exports.init = function() {
                 return false;
             }
         });
-
+/*
+ * 
+ * caused issue
+ */
         window.onpopstate = function(ev) {
             if(exports._in_page) {
                 exports._in_page = false;

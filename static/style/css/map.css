@@ -17,6 +17,11 @@ body {
 	color: white;
 	font-size: 20px;
 }
+
+.modal{
+	color:black;
+}
+
 .ui-autocomplete {
 	position: absolute;
 	top: 0;

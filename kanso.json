@@ -23,6 +23,7 @@
 		"handlebars": null,
 		"handlebars-helpers": null,
 		"duality-handlebars": null,
-		"i18next-node-kanso": null
+		"i18next-node-kanso": null,
+		"couchtypes": null
 	}
 }

@@ -9,29 +9,72 @@
     // console.log(baseUrl)
     //
     //
+    $(function() {
+
+        $("#addForm").submit(function() {
+            console.log("submitted");
+
+            var $form = $(this);
+            var $target = $($form.attr('data-target'));
+
+            // var $target = $("#modal-body");
+            $.ajax({
+                type : $form.attr('method'),
+                url : $form.attr('action'),
+                data : $form.serialize(),
+
+                success : function(data, status) {
+                    $target.html(data);
+                    //TODO hide buttons
+                }
+            });
+
+            return false;
+
+        });
+
+        $(document).on('click', '#myModal a', function(ev) {
+            console.log("Using add.html funciton for link");
+			//if modal already open, close it
+			
+			$('#myModal').modal('hide');
+			
+        });
+
+        // $('#mark').click(function() {
+        // $('#addForm').submit();
+        // })
+    }); 
 </script>
 <!-- http://localhost:5984/light/c942093f68371eec17bb0d458e0c6344/attachment -->
 <div>
 
 	<!-- Modal -->
 	<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-			<h3 id="myModalLabel">Modal header</h3>
-		</div>
-		<div class="modal-body">
-			<p>
-				One fine body…
-			</p>
-		</div>
-		<div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">
-				Close
-			</button>
-			<button class="btn btn-primary">
-				Save changes
-			</button>
-		</div>
+		<form id="addForm" data-target="#addModalBody" method="post" action="{{baseURL}}/{{action}}">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+				<h3 id="myModalLabel">{{t form_title}}</h3>
+			</div>
+			<div id="addModalBody" class="modal-body">
+				<p>
+					{{status}}
+					<table>
+						{{{form}}}
+					</table>
+					<!-- 				<input type="submit" value="{{button}}" /> -->
+
+				</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal" aria-hidden="true">
+					{{t "add.cancel"}}
+				</button>
+				<button id="mark" type="submit" form="addForm" class="btn btn-primary">
+					{{t "add.submit"}}
+				</button>
+			</div>
+		</form>
 	</div>
 
 	<div>
