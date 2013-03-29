@@ -16,7 +16,6 @@ var permissions = require('couchtypes/permissions'),
     utils = require('couchtypes/utils'),
     _ = require('underscore')._;
 
-
 /**
  * Field objects are used when constructing content types and forms.
  *
@@ -915,3 +914,7 @@ exports.attachments = function (options) {
     options.widget = options.widget || widgets.file();
     return new exports.AttachmentField(options);
 };
+
+
+log("init once");
+log(exports);

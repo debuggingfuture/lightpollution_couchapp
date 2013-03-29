@@ -192,18 +192,18 @@ module.exports = {
 
                 },
                 "add" : {
-                    form:{
-                        "title":"Title",
-                        "desc":"Description",
-                        "locationDesc":"Locaiton",
-                        "captureDate":"Capture Date"
+                    form : {
+                        "title" : "Title",
+                        "desc" : "Description",
+                        "locationDesc" : "Locaiton",
+                        "captureDate" : "Capture Date"
                     },
                     "title" : "Mark the light pollution spot on the map.",
                     "desc" : "Your actions make the world a beter place.",
                     "desc_sub" : "Give us the details about the light pollution spot. Let the media follow up.",
-                    "mark":"Mark Light Pollution Spot",
+                    "mark" : "Mark Light Pollution Spot",
                     "mark_now" : "Mark Now",
-                    "submit": "Mark"
+                    "submit" : "Mark"
                 }
 
             };
@@ -226,18 +226,18 @@ module.exports = {
                     "search" : "搜尋"
                 },
                 "add" : {
-                      form:{
-                        "title":"標題",
-                        "desc":"光害情況",
-                        "locationDesc":"地點",
-                                             "captureDate":"Capture Date"
+                    form : {
+                        "title" : "標題",
+                        "desc" : "光害情況",
+                        "locationDesc" : "地點",
+                        "captureDate" : "Capture Date"
                     },
                     "title" : "在地圖舉報光害黑點",
                     "desc" : "令香港成為一個更少污染的城市",
                     "desc_sub" : "舉報光害黑點，讓傳媒及市民監察",
                     "mark" : "舉報光害黑點",
-                    "mark_now":"舉報",
-                    "submit": "舉報"
+                    "mark_now" : "舉報",
+                    "submit" : "舉報"
                 }
             };
         }

@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"description": "The simplest possible app",
 	"attachments": ["static"],
-	"modules": ["lib"],
+	"modules": ["lib","tests"], 
 	"load": "lib/app",
 	"handlebars": {
 		"all_partials": false,
@@ -24,6 +24,8 @@
 		"handlebars-helpers": null,
 		"duality-handlebars": null,
 		"i18next-node-kanso": null,
-		"couchtypes": null
+		"couchtypes": null,
+        "nodeunit": null,
+        "nodeunit-testrunner": null
 	}
 }

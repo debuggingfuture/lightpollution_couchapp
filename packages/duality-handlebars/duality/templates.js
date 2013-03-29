@@ -43,39 +43,32 @@ handlebars.registerHelper('t', function(str) {
 handlebars.registerHelper('isBrowser', utils.isBrowser);
 
 exports.renderHTML = function(html, req, context) {
-    log("req state , in templates.js");
-/*
- * 
- * TODO Refactor locale detection
- */
-    var locale = req.query.setLng;
-    log("detect by i18" + i18n.detectLanguage())
-    log(locale);
-    i18n.init({
-        lng : locale
-    })
-
+    seti18(req);
     context.userCtx = req.userCtx;
     if(!context.flashMessages && flashmessages) {
         context.flashMessages = flashmessages.getMessages(req);
     }
 
     var compiledTempalte = handlebars.compile(html);
-
     return compiledTempalte(context);
 
 };
 
-exports.render = function(name, req, context) {
-    log("req state , in templates.js");
-
+function seti18(req) {
     var locale = req.query.setLng;
     log("detect by i18" + i18n.detectLanguage())
     log(locale);
     i18n.init({
         lng : locale,
-        fallbackLng: 'en-US' 
+        fallbackLng : 'en-US'
     })
+}
+
+exports.render = function(name, req, context) {
+    log("req state , in templates.js");
+
+
+    seti18(req);
 
     handlebars.registerHelper('baseURL', function() {
         return utils.getBaseURL(req);
@@ -123,7 +116,7 @@ var entityRegexes = {
 };
 
 exports._unescape = function(string) {
-    var method="unescape";
+    var method = "unescape";
     if(string == null)
         return '';
     return ('' + string).replace(entityRegexes[method], function(match) {
