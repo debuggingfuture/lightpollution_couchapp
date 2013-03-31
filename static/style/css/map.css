@@ -18,8 +18,27 @@ body {
 	font-size: 20px;
 }
 
+
+
 .modal{
+    z-index: 2000;   
 	color:black;
+	width: 800px;
+}
+.modal-body {
+    max-height: 800px;
+}
+
+.modal-backdrop{
+    z-index: 1030;        
+}​
+
+.pac-container {
+    background-color: #FFF;
+    z-index: 2000;
+    position: fixed;
+    display: inline-block;
+    float: left;
 }
 
 .ui-autocomplete {
@@ -57,6 +76,10 @@ body {
 
 .item {
 	height: 370px;
+}
+
+.form-content input,textarea{
+	width: 100%;
 }
 div.spots .main {
 	height: 290px;
@@ -128,7 +151,7 @@ div.spots .main {
 }
 
 #map_canvas.small {
-	height: 200px;
+	height: 300px;
 
 }
 

@@ -1,12 +1,7 @@
 <script>
-    var geocoder = new google.maps.Geocoder();
- var reverseGeocomplete = require('lib/revgeocomplete');
- 
+    var reverseGeocomplete = require('lib/revgeocomplete');
+
     $().ready(function() {
-        // var gmap = require('lib/gmap');
-        // gmap.initialize("map_canvas");
-        // gmap.setupHK();
-        // gmap.setupHK();
 
         $("#geocomplete").geocomplete({
             map : ".map_canvas",
@@ -31,6 +26,7 @@
             $("input[name=lng]").val(latLng.lng());
 
 
+			
             /*
             * Quite complicated but important use cases:
             * User drag the marker, which will get new latLng
@@ -47,25 +43,14 @@
                 $("input[name=formatted_address]").val(results[1].formatted_address);
 
                 var suggestionClickCallback = function(result) {
-
                     $("#geocomplete").trigger("geocode");
                 }
-                //hide original suggestions. remove will cause original stopped working since google try to remove them. No issue if we only prepennd
-                reverseGeocomplete.getContainer().children().hide();
-                //remove previous reverseGeocode suggestions as user keep dragging
-                reverseGeocomplete.removeReverseGeocodeSuggestions();
-                reverseGeocomplete.addSuggestions(results, suggestionClickCallback);
-                reverseGeocomplete.getContainer().children("pac-item reverse-gecode-suggested").show();
-                
-                reverseGeocomplete.getContainer().show();
-                
-                
+                reverseGeocomplete.renderSuggestions(results, suggestionClickCallback);
                 //TODO remove when mouseover but did not click, or user type new stuff
-
                 /*
-                * Add the listeners back to these links
-                need remove them afterwards..
-                */
+                 * Add the listeners back to these links
+                 need remove them afterwards..
+                 */
 
             });
         });
@@ -73,14 +58,12 @@
         $("#find").click(function() {
             $("#geocomplete").trigger("geocode");
         }).click();
-        
-         //TODO: issue if draggable before keydown, incorrect layout
-            //Bad trick here to trigger google's layout generation, but wont work most cases <= async generate of container
-            $(".pac-container").focus();
-            $(".pac-container").blur();
 
+        //TODO: issue if draggable before keydown, incorrect layout
+        //Bad trick here to trigger google's layout generation, but wont work most cases <= async generate of container
+        $(".pac-container").focus();
+        $(".pac-container").blur();
 
-			//position:abs; z-index1000
 
     }); 
 </script>

@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"description": "The simplest possible app",
 	"attachments": ["static"],
-	"modules": ["lib","tests"], 
+	"modules": ["lib","tests","static/locales"], 
 	"load": "lib/app",
 	"handlebars": {
 		"all_partials": false,

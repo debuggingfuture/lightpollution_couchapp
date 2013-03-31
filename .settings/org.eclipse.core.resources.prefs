@@ -1,5 +1,7 @@
-#Sat Feb 23 19:58:15 HKT 2013
+#Sun Mar 31 21:11:24 HKT 2013
 eclipse.preferences.version=1
+encoding//lib/appForm.js=UTF-8
 encoding//packages/i18next-node-kanso/lib/couchDbsync.js=UTF-8
+encoding//static/locales/zh_TW/translation.js=UTF-8
 encoding//templates/add.html=UTF-8
 encoding//templates/navigation.html=UTF-8

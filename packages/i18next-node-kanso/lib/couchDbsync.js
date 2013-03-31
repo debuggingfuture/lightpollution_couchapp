@@ -154,93 +154,18 @@ module.exports = {
 
         // since whenever exist will be used for fall back e.g pass both en-US and en-110,
         //harder to match should talk higher priority
+        /*
+         * Not good enough: all resourcs actually loaded and send to client
+         * with duality
+         */
 
         log("couchid:" + id + "lng:" + lng)
         if(lng == "en-US") {
-            res = {
-                "app" : {
-                    "name" : "Light Pollution Map"
-                },
-                "header1" : {
-                    "title" : "Hong Kong Light Pollution Map",
-                    "desc" : "Database for reporting the light pollution black spots in Hong Kong"
-                },
-                "header2" : {
-                    "title" : "Brigther after light out",
-                    "desc" : "Database for reporting the light pollution black spots in Hong Kong"
-                },
-                "nav" : {
-                    "home" : "Home",
-                    "light_pollution" : "Light Pollution",
-                    "add" : "Add",
-                    "search" : "Search"
-                },
-                "about" : {
-                    "heading1" : "Light pollution",
-                    "desc1" : "is any adverse effect of artificial light, including sky glow, glare, light trespass, light clutter, decreased visibility at night and energy waste.",
-                    "desc_sub1" : "Give us the details about the light pollution spot. Let the media follow up.",
-                    "desc_link1" : "Definition by International Dark SKy Association",
-                    "heading2" : "Energy Waste",
-                    "desc2" : "Light Pollution",
-                    "desc_sub2" : "Light Pollution",
-                    "heading3" : "Impact on Astronomy",
-                    "desc3" : "People don't believe they can see the Milky way in Hong Kong. It is possible but not any more if light pollution is getting worse.",
-                    "desc_sub3" : "Light Pollution",
-                    "heading4" : "To Know more",
-                    "desc4" : "Visit these websites",
-                    "desc_link4" : "Earth hour",
-
-                },
-                "add" : {
-                    form : {
-                        "title" : "Title",
-                        "desc" : "Description",
-                        "locationDesc" : "Locaiton",
-                        "captureDate" : "Capture Date"
-                    },
-                    "title" : "Mark the light pollution spot on the map.",
-                    "desc" : "Your actions make the world a beter place.",
-                    "desc_sub" : "Give us the details about the light pollution spot. Let the media follow up.",
-                    "mark" : "Mark Light Pollution Spot",
-                    "mark_now" : "Mark Now",
-                    "submit" : "Mark"
-                }
-
-            };
+            var en_us = require('static/locales/en-US/translation').translation;
+            res = en_us;
         } else {
-            res = {
-                "app" : {
-                    "name" : "香港光害地圖"
-                },
-                "header1" : {
-                    "title" : "香港光害地圖",
-                    "desc" : "舉報香港光害黑點"
-                },
-                "header2" : {
-                    "title" : "Hong Kong Light Pollution Map"
-                },
-                "nav" : {
-                    "home" : "目錄",
-                    "light_pollution" : "關於光污染",
-                    "add" : "舉報黑點",
-                    "search" : "搜尋"
-                },
-                "add" : {
-                    form : {
-                        "title" : "標題",
-                        "desc" : "光害情況",
-                        "locationDesc" : "地點",
-                        "captureDate" : "Capture Date",
-                        "formatted_address":"圖標地址"
-                    },
-                    "title" : "在地圖舉報光害黑點",
-                    "desc" : "令香港成為一個更少污染的城市",
-                    "desc_sub" : "舉報光害黑點，讓傳媒及市民監察",
-                    "mark" : "舉報光害黑點",
-                    "mark_now" : "舉報",
-                    "submit" : "舉報"
-                }
-            };
+            var zh_tw = require('static/locales/zh_TW/translation').translation;
+            res = zh_tw;
         }
         cb(null, res);
 

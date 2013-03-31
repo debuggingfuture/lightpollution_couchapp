@@ -35,17 +35,112 @@
 
         $(document).on('click', '#myModal a', function(ev) {
             console.log("Using add.html funciton for link");
-			//if modal already open, close it
-			
-			$('#myModal').modal('hide');
-			
+            //if modal already open, close it
+
+            $('#myModal').modal('hide');
+
         });
 
         // $('#mark').click(function() {
         // $('#addForm').submit();
         // })
+        //This prevents google map only render partially
+        //http://stackoverflow.com/questions/11742839/showing-a-google-map-in-a-modal-created-with-twitter-bootstrap
+
     }); 
 </script>
+
+<script>
+    var reverseGeocomplete = require('lib/revgeocomplete');
+
+    $().ready(function() {
+
+        $("#id_locationDesc").geocomplete({
+            map : ".map_canvas",
+            details : "form",
+            country : 'hk',
+            markerOptions : {
+                draggable : true
+            }
+
+        });
+
+        var map = $("#id_locationDesc").geocomplete("map");
+
+        $("#id_locationDesc").bind("geocode:dragged", function(event, latLng) {
+            /*
+             * Increase zoom when drag, and centralize
+             *
+             */
+            map.setZoom(17);
+            map.setCenter(latLng);
+
+            $("#id_locationLat").val(latLng.lat());
+            $("#id_locationLng").val(latLng.lng());
+
+            /*
+            * Quite complicated but important use cases:
+            * User drag the marker, which will get new latLng
+            * Then we reverse geocode this latLng from marker to get address suggestions
+            * Need another round of suggestions, cannot simply use that address as may not accurate
+            *  Need to hack google 's auto complete to show suggestions based on the marker as if it is same as typing
+            * just we wont "bold" on existing keywords
+            */
+            // should threat what user entered as golden source, maker is only for help
+
+            //TODO Also select the first option from the suggestions when a user presses enter
+
+            reverseGeocomplete.reverseGeo(latLng, function(results) {
+                // $("input[name=formatted_address]").val(results[1].formatted_address);
+
+                var suggestionClickCallback = function(result) {
+                    $("#id_locationDesc").trigger("geocode");
+                }
+                reverseGeocomplete.renderSuggestions(results, suggestionClickCallback);
+                //TODO remove when mouseover but did not click, or user type new stuff
+                /*
+                 * Add the listeners back to these links
+                 need remove them afterwards..
+                 */
+
+            });
+        });
+
+        //init some fields...while localization needed
+        //     $("#id_locationDesc").attr("placeholder", "尖沙咀星光大道");
+        //ZOOM!
+        // map.setCenter();
+
+        //update map
+        //
+        // $("#find").click(function() {
+        // $("#id_locationDesc").trigger("geocode");
+        // }).click();
+
+        //TODO: issue if draggable before keydown, incorrect layout
+        //Bad trick here to trigger google's layout generation, but wont work most cases <= async generate of container
+        $(".pac-container").focus();
+        $(".pac-container").blur();
+        $('#myModal').on('shown', function() {
+
+            console.log("Modal is shown");
+            google.maps.event.trigger(map, "resize");
+
+            /*
+             * Issue:google suggestions hidden by the modal layer
+             * the pac-container is added to the end of doc and will have z-index=1000 when render
+             * change in CSS is not sufficient
+             * quick fix to make sure it is on top and same as modal
+             *
+             * http://stackoverflow.com/questions/10957781/google-maps-autocomplete-result-in-bootstrap-modal-dialog
+             */
+            $(".pac-container").css("z-index", $("#myModal").css("z-index"));
+            $("#id_locationDesc").trigger("geocode");
+        });
+
+    }); 
+</script>
+
 <!-- http://localhost:5984/light/c942093f68371eec17bb0d458e0c6344/attachment -->
 <div>
 
@@ -59,13 +154,20 @@
 			<div id="addModalBody" class="modal-body">
 				<p>
 					{{status}}
-					<table>
-						{{{form}}}
-					</table>
-					<!-- 				<input type="submit" value="{{button}}" /> -->
-
+					<div class="row">
+						<div class="span4">
+							<table>
+								{{{form}}}
+							</table>
+						</div>
+						<div class="span4">
+							{{{form_map}}}
+						</div>
+					</div>
 				</p>
+				<!-- 				<input type="submit" value="{{button}}" /> -->
 			</div>
+
 			<div class="modal-footer">
 				<button class="btn" data-dismiss="modal" aria-hidden="true">
 					{{t "add.cancel"}}

@@ -67,7 +67,6 @@ function seti18(req) {
 exports.render = function(name, req, context) {
     log("req state , in templates.js");
 
-
     seti18(req);
 
     handlebars.registerHelper('baseURL', function() {

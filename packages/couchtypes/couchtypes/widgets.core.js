@@ -12,6 +12,7 @@
  */
 
 var sanitize = require('sanitize'),
+
     session = require('session'),
     _ = require('underscore')._;
 
@@ -159,6 +160,17 @@ Widget.prototype.toHTML = function (name, value, raw, field, options) {
     if ('readonly' in this.options) {
         html += ' readonly="' + h(this.options.readonly) + '"';
     }
+    /*
+     * Added Vincent
+     * 
+     */
+    if ('placeholder' in this.options) {
+       log("placeholder");
+        html += ' placeholder="' + h(this.options.placeholder) + '"';
+    }
+    
+    
+    
     return html + ' />';
 };
 
