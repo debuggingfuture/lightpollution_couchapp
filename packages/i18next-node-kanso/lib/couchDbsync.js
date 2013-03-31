@@ -230,7 +230,8 @@ module.exports = {
                         "title" : "標題",
                         "desc" : "光害情況",
                         "locationDesc" : "地點",
-                        "captureDate" : "Capture Date"
+                        "captureDate" : "Capture Date",
+                        "formatted_address":"圖標地址"
                     },
                     "title" : "在地圖舉報光害黑點",
                     "desc" : "令香港成為一個更少污染的城市",

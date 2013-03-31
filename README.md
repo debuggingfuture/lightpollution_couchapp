@@ -11,3 +11,5 @@ to use with handlebars, put this in html
 
 Run watchr kanso.watchr to have change-driven-auto-push
 
+
+https://blackheart.cloudbees.cloudant.com/lightpollution/_design/light-app/_rewrite/

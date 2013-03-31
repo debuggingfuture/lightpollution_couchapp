@@ -1,0 +1,110 @@
+<script>
+    var geocoder = new google.maps.Geocoder();
+ var reverseGeocomplete = require('lib/revgeocomplete');
+ 
+    $().ready(function() {
+        // var gmap = require('lib/gmap');
+        // gmap.initialize("map_canvas");
+        // gmap.setupHK();
+        // gmap.setupHK();
+
+        $("#geocomplete").geocomplete({
+            map : ".map_canvas",
+            details : "form",
+            country : 'hk',
+            markerOptions : {
+                draggable : true
+            }
+
+        });
+
+        $("#geocomplete").bind("geocode:dragged", function(event, latLng) {
+            /*
+             * Increase zoom when drag, and centralize
+             *
+             */
+            var map = $("#geocomplete").geocomplete("map");
+            map.setZoom(17);
+            map.setCenter(latLng);
+
+            $("input[name=lat]").val(latLng.lat());
+            $("input[name=lng]").val(latLng.lng());
+
+
+            /*
+            * Quite complicated but important use cases:
+            * User drag the marker, which will get new latLng
+            * Then we reverse geocode this latLng from marker to get address suggestions
+            * Need another round of suggestions, cannot simply use that address as may not accurate
+            *  Need to hack google 's auto complete to show suggestions based on the marker as if it is same as typing
+            * just we wont "bold" on existing keywords
+            */
+            // should threat what user entered as golden source, maker is only for help
+
+            //TODO Also select the first option from the suggestions when a user presses enter
+
+            reverseGeocomplete.reverseGeo(latLng, function(results) {
+                $("input[name=formatted_address]").val(results[1].formatted_address);
+
+                var suggestionClickCallback = function(result) {
+
+                    $("#geocomplete").trigger("geocode");
+                }
+                //hide original suggestions. remove will cause original stopped working since google try to remove them. No issue if we only prepennd
+                reverseGeocomplete.getContainer().children().hide();
+                //remove previous reverseGeocode suggestions as user keep dragging
+                reverseGeocomplete.removeReverseGeocodeSuggestions();
+                reverseGeocomplete.addSuggestions(results, suggestionClickCallback);
+                reverseGeocomplete.getContainer().children("pac-item reverse-gecode-suggested").show();
+                
+                reverseGeocomplete.getContainer().show();
+                
+                
+                //TODO remove when mouseover but did not click, or user type new stuff
+
+                /*
+                * Add the listeners back to these links
+                need remove them afterwards..
+                */
+
+            });
+        });
+
+        $("#find").click(function() {
+            $("#geocomplete").trigger("geocode");
+        }).click();
+        
+         //TODO: issue if draggable before keydown, incorrect layout
+            //Bad trick here to trigger google's layout generation, but wont work most cases <= async generate of container
+            $(".pac-container").focus();
+            $(".pac-container").blur();
+
+
+			//position:abs; z-index1000
+
+    }); 
+</script>
+<div>
+	<form>
+		<div class="span4">
+			<div id="map_canvas" class="map_canvas small"></div>
+			<p></p>
+			<div>
+				<input id="geocomplete" type="text" placeholder="Type in an address" value="Tsim Sha Tsui, Hong Kong" autocomplete="off">
+				<input id="find" type="button" value="Find">
+			</div>
+		</div>
+		<div class="span4">
+			<fieldset>
+				<label>Latitude</label>
+				<input name="lat" type="text" value="">
+
+				<label>Longitude</label>
+				<input name="lng" type="text" value="">
+
+				<label>{{t "add.form.formatted_address"}}</label>
+				<input name="formatted_address" type="text" value="">
+			</fieldset>
+		</div>
+	</form>
+</div>

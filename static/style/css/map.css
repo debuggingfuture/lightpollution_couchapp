@@ -126,3 +126,15 @@ div.spots .main {
 	/*				 TODO study how css fit parent*/
 
 }
+
+#map_canvas.small {
+	height: 200px;
+
+}
+
+/*
+ * Suggestions
+ */
+div.pac-container {
+	color:black;
+}
