@@ -57,15 +57,28 @@
 
         $("#id_locationDesc").geocomplete({
             map : ".map_canvas",
-            details : "form",
+            // details : "form",
             country : 'hk',
             markerOptions : {
                 draggable : true
             }
 
+        }).bind("geocode:result", function(event, result) {
+            populateLatLng(result.geometry.location);
         });
 
+        /*
+         * Instead of using defauly name pair to populate during geocomplete,
+         * use custom listener to give flexibility in generated naming of fields
+         *
+         */
+
         var map = $("#id_locationDesc").geocomplete("map");
+        function populateLatLng(latLng) {
+            $("#id_locationLat").val(latLng.lat());
+            $("#id_locationLng").val(latLng.lng());
+        }
+
 
         $("#id_locationDesc").bind("geocode:dragged", function(event, latLng) {
             /*
@@ -75,8 +88,7 @@
             map.setZoom(17);
             map.setCenter(latLng);
 
-            $("#id_locationLat").val(latLng.lat());
-            $("#id_locationLng").val(latLng.lng());
+            populateLatLng(latLng);
 
             /*
             * Quite complicated but important use cases:
@@ -117,10 +129,6 @@
         // $("#id_locationDesc").trigger("geocode");
         // }).click();
 
-        //TODO: issue if draggable before keydown, incorrect layout
-        //Bad trick here to trigger google's layout generation, but wont work most cases <= async generate of container
-        $(".pac-container").focus();
-        $(".pac-container").blur();
         $('#myModal').on('shown', function() {
 
             console.log("Modal is shown");
@@ -136,6 +144,11 @@
              */
             $(".pac-container").css("z-index", $("#myModal").css("z-index"));
             $("#id_locationDesc").trigger("geocode");
+
+            //TODO: issue if draggable before keydown, incorrect layout
+            //Bad trick here to trigger google's layout generation, but wont work most cases <= async generate of container
+            $("#id_locationDesc").focus();
+            $("#id_locationDesc").blur();
         });
 
     }); 

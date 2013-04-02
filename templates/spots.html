@@ -11,7 +11,8 @@
 	<div class="row spots">
 		<h3>List of light pollution spots </h3>
 	</div>
-	{{#each rows}}
+	{{{include "paging.html"}}}
+		{{#each rows}}
 	{{#with value}}
 	<!-- Used fix height, need to sync in css
 	just happended to use nav-->
@@ -22,58 +23,82 @@
 			</div>
 		</div>
 		<div class="span8 nav main">
-			<div class="spot-details">
-				<div class="row">
-					<div class="span6">
-						<h4>{{title}} <span class="label label-important">Serious</span><span class="label label-success">New</span></h4>
+			<div class="row">
+				<div class="span4 spot-details">
+					<div class="row">
+						<div class="span4">
+							<h4>{{title}} <span class="label label-important">Serious</span> {{#if newTag}} <span class="label label-success">New</span> {{/if}}</h4>
+
+						</div>
 					</div>
-					<div class="span6">
-						<b>{{desc}}</b>
+					<div class="row">
+						<div class="span2">
+							Location:
+						</div>
+						<div class="span2">
+							{{locationDesc}}
+						</div>
 					</div>
+					<div class="row">
+						<div class="span2">
+							Description:
+						</div>
+						<div class="span2">
+							{{description}}
+						</div>
+					</div>
+					<div class="row">
+						<div class="span2">
+							Upload Date:
+						</div>
+						<div class="span2">
+							{{upload_date}}
+						</div>
+					</div>
+					<div class="row">
+						<div class="span2">
+							Uploader:
+						</div>
+						<div class="span2">
+							{{uploader}}
+						</div>
+					</div>
+
+					{{#if capture_date}}
+					<div class="row">
+						<div class="span2">
+							Capture Time:
+						</div>
+						<div class="span2">
+							{{capture_date}}
+						</div>
+					</div>
+					{{/if}}
+
 				</div>
-				<div class="row">
-					<div class="span2">
-						Upload Date:
-					</div>
-					<div class="span4">
-						{{pp_date}}
-					</div>
-				</div>
-				<div class="row">
-					<div class="span2">
-						Uploader:
-					</div>
-					<div class="span4">
-						{{uploader}}
-					</div>
-				</div>
-				<div class="row">
-					<div class="span2">
-						Location:
-					</div>
-					<div class="span4">
-						{{locationDesc}}
-					</div>
-				</div>
-				{{#if spottime}}
-				<div class="row">
-					<div class="span2">
-						Reported Time:
-					</div>
-					<div class="span4">
-						{{spottime}}
-					</div>
-				</div>
-				{{/if}}
+				<!-- 			potential to show map here as well -->
+				<!-- 			<div class="span3">
+
+				</div> -->
 			</div>
 		</div>
 	</div>
 	{{/with}}
 	{{/each}}
-	<b>End of light pollution spots</b>
-
-	{{{include "footer.html"}}}
+	<div class="row">
+		<div class="span12">
+		</div>
+	</div>
+{{{include "paging.html"}}}
 </div>
+
+<div id="startkey" style="display:none;">
+	{{startkey}}
+</div>
+<div id="next_startkey" style="display:none;">
+	{{next_startkey}}
+</div>
+<!-- {{{include "footer.html"}}} -->
 <!--
 <script src="script/bootstrap.js"></script>
 <script src="script/bootstrap.min.js"></script>
@@ -96,6 +121,22 @@
             console.log("create");
         });
         //UI control
+
+        function getURLParameter(name) {
+            return decodeURI((RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]);
+        }
+
+        var startkey = $("#startkey").text().trim();
+        var next_startkey = $("#next_startkey").text().trim();
+        var prevkey = getURLParameter("prevkey");
+        if(prevkey && prevkey !== 'null') {
+            $("#prev").attr("href", "?startkey=" + prevkey);
+            $("#prev").show();
+        }
+        if(next_startkey) {
+            $("#next").attr("href", "?startkey=" + next_startkey + "&prevkey=" + startkey);
+            $("#next").show();
+        }
 
     })
 </script>

@@ -38,7 +38,8 @@ exports.translation = {
             "desc" : "Description",
             "locationDesc" : "Locaiton",
             "description":"Description",
-            "captureDate" : "Capture Date"
+            "captureDateTime" : "Capture Date Time",
+            
         },
         form_default : {
             "title" : "Light Pollution Issue",

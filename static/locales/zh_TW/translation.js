@@ -21,7 +21,7 @@ exports.translation = {
             "desc" : "光害情況",
             "locationDesc" : "地點",
             "description":"Description",
-            "captureDate" : "Capture Date",
+            "captureDateTime" : "拍攝時間",
             "formatted_address" : "圖標地址"
         },
         form_default : {
