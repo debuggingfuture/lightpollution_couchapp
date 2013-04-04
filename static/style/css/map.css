@@ -18,27 +18,25 @@ body {
 	font-size: 20px;
 }
 
-
-
-.modal{
-    z-index: 2000;   
-	color:black;
+.modal {
+	z-index: 2000;
+	color: black;
 	width: 800px;
 }
 .modal-body {
-    max-height: 800px;
+	max-height: 800px;
 }
 
-.modal-backdrop{
-    z-index: 1030;        
+.modal-backdrop {
+	z-index: 1030;
 }​
 
 .pac-container {
-    background-color: #FFF;
-    z-index: 2000;
-    position: fixed;
-    display: inline-block;
-    float: left;
+	background-color: #FFF;
+	z-index: 2000;
+	position: fixed;
+	display: inline-block;
+	float: left;
 }
 
 .ui-autocomplete {
@@ -78,7 +76,7 @@ body {
 	height: 370px;
 }
 
-.form-content input,textarea{
+.form-content input, textarea {
 	width: 100%;
 }
 div.spots .main {
@@ -152,16 +150,15 @@ div.spots .main {
 
 #map_canvas.small {
 	height: 300px;
-
 }
 
-
 .paging {
-	font-size: 20px;
+	font-size: 25px;
+	font-weight: 300;
 }
 /*
  * Suggestions
  */
 div.pac-container {
-	color:black;
+	color: black;
 }

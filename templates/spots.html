@@ -85,11 +85,10 @@
 	</div>
 	{{/with}}
 	{{/each}}
-	<div class="row">
-		<div class="span12">
-		</div>
+	<div >
+		{{{include "paging.html"}}}
 	</div>
-{{{include "paging.html"}}}
+
 </div>
 
 <div id="startkey" style="display:none;">
@@ -110,6 +109,8 @@
         var gmap = require('lib/gmap');
         gmap.initialize("map_canvas");
         gmap.setupHK();
+        
+        gmap.fetchAndMarkAllSpots();
         //UI control
         // $('.carousel').carousel()
 
@@ -130,11 +131,11 @@
         var next_startkey = $("#next_startkey").text().trim();
         var prevkey = getURLParameter("prevkey");
         if(prevkey && prevkey !== 'null') {
-            $("#prev").attr("href", "?startkey=" + prevkey);
+            $("#prev").attr("href", $("#next").attr("href")+"?startkey=" + prevkey);
             $("#prev").show();
         }
         if(next_startkey) {
-            $("#next").attr("href", "?startkey=" + next_startkey + "&prevkey=" + startkey);
+            $("#next").attr("href", $("#next").attr("href")+"?startkey=" + next_startkey + "&prevkey=" + startkey);
             $("#next").show();
         }
 

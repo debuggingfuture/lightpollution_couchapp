@@ -185,7 +185,7 @@ exports.init = function() {
             /*
              * FIXED: bug related to set as true whenever there is locallink
              */
-            exports._in_page=false;
+            exports._in_page = false;
             console.log("original")
             if(!action) {
                 action = ""
@@ -219,15 +219,16 @@ exports.init = function() {
 
             }
             ev.preventDefault();
-            
+
             //callback
-           return false;
+            return false;
         });
 
         // $('a').live('click', function(ev) {
-            $(document).on('click','a',function(ev){
-                console.log("Using Duality function for link");
-            exports._in_page=false; //to fix some case default it is true
+        $(document).on('click', 'a', function(ev) {
+            console.log("Using Duality function for link");
+            exports._in_page = false;
+            //to fix some case default it is true
             var href = $(this).attr('href');
             var rel = $(this).attr('rel');
 
@@ -255,10 +256,10 @@ exports.init = function() {
                 return false;
             }
         });
-/*
- * 
- * caused issue
- */
+        /*
+         *
+         * caused issue
+         */
         window.onpopstate = function(ev) {
             if(exports._in_page) {
                 exports._in_page = false;
@@ -636,22 +637,37 @@ exports.parseResponse = function(req, res) {
         if(!templates) {
             throw new Error('Short-hand response style requires template module');
         }
-        var body = templates.render(BASE_TEMPLATE, req, context);
-        res = {
-            body : body,
-            code : res.code || 200,
-            headers : res.headers
-        };
+        //actually auto detect?
+        //TODO should add use case no base but as html
+
+        if(req.no_base) {
+            log("[DEBUG]pure json");
+            var body = JSON.stringify(context);
+            res.headers = res.headers || {};
+
+            res.headers['Content-Type'] = 'application/json';
+
+            res = {
+                body : body,
+                code : res.code || 200,
+                headers : res.headers
+            };
+        } else {
+            log("[DEBUG]use base template");
+            var body = templates.render(BASE_TEMPLATE, req, context);
+            res = {
+                body : body,
+                code : res.code || 200,
+                headers : res.headers
+            };
+        }
+        log("render base.html" + "sessionChange- utils:" + utils.userCtx + "currentRequest:" + "ss");
+
     }
-    log("render base.html" + "sessionChange- utils:" + utils.userCtx + "currentRequest:" + "ss");
     log("CR")
     log(utils.currentRequest())
     log("lang")
     log(utils.currentRequest().query.setLng);
-
-    var i18n = require('i18next-node-kanso');
-    // log("detect by i18" + i18n.detectLanguage())
-    // i18n.init({})
 
     return {
         body : res.body,
@@ -682,6 +698,7 @@ exports.runShow = function(fn, doc, req) {
         };
     } else {
         res = exports.parseResponse(req, res);
+
     }
     events.emit('beforeResponseStart', info, req, res);
     events.emit('beforeResponseData', info, req, res, res.body || '');
@@ -905,8 +922,13 @@ exports.runListBrowser = function(req, name, view, callback) {
                 };
                 var head = exports.createHead(data);
                 var res = exports.runList(fn, head, req);
+                //wont reach here?
+                // log(res);
+
                 events.emit('afterResponse', info, req, res);
+                log('afterRes');
                 if(res) {
+                    log('handleRes');
                     exports.handleResponse(req, res);
                 } else {
                     // returned without response, meaning cookies won't be set
@@ -1011,6 +1033,7 @@ exports.runList = function(fn, head, req) {
     start = _start;
     send = _send;
     req.response_received = true;
+    log("Done run List");
     return val;
 };
 
