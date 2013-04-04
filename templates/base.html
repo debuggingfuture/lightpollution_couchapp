@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 	<head>
-<meta charset="utf-8">
+		<meta charset="utf-8">
 		<title>Light Pollution Map| {{title}}</title>
 		<link href="{{baseURL}}/static/style/css/bootstrap.css" rel="stylesheet">
 		<link href="{{baseURL}}/static/style/css/bootstrap-responsive.css" rel="stylesheet">
 		<link href="{{baseURL}}/static/style/css/map.css" rel="stylesheet">
 		<link href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" rel="stylesheet">
-		
+
 		<script type="text/javascript"	src="//maps.googleapis.com/maps/api/js?key=AIzaSyAD0DuFfwB-m7JYCejyWCwkVFrRIvyH3RE&sensor=false&libraries=places&region=HK"></script>
 		<!-- 		need explicit loading 1.4.2 for duality.js 1.9.2 not supproted?-->
 		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -17,14 +17,30 @@
 		<!-- 		<script src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-carousel.js"></script> -->
 		<script type="text/javascript" src="{{baseURL}}/modules.js"></script>
 		<script type="text/javascript" src="{{baseURL}}/duality.js"></script>
-		
+
 		<script type="text/javascript" src="{{baseURL}}/static/script/jquery.geocomplete.js"></script>
-<!-- 		https://raw.github.com/ubilabs/geocomplete/master/jquery.geocomplete.js -->
+		<!-- 		https://raw.github.com/ubilabs/geocomplete/master/jquery.geocomplete.js -->
 
 		<!-- 		<script type="text/javascript" src="	//raw.github.com/fnando/i18n-js/master/vendor/assets/javascripts/i18n.js"></script> -->
 		<!-- 		<script type="text/javascript" src="//jamuhl.github.com/i18next/public/download/versions/i18next-1.6.0.min.js"></script> -->
 
-		<!--  -->
+		<!-- google analytics-->
+		<script>
+            (function(i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] ||
+                function() {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-39862281-1', 'cloudant.com');
+            ga('send', 'pageview');
+		</script>
 		<script type="text/javascript">
             //can we log baseUrl?
             var users = require('users');
@@ -81,8 +97,7 @@
 	</head>
 	<body>
 		<div class="container">
-			<div id="search-result">
-			</div>
+			<div id="search-result"></div>
 			{{{include "navigation.html"}}}
 			<!-- 			Base{{baseURL}}
 			def{{a}}
@@ -90,6 +105,7 @@
 			<div id="content">
 				{{{content}}}
 			</div>
+			{{{include "footer.html"}}}
 		</div>
 	</body>
 

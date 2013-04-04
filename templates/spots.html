@@ -19,7 +19,7 @@
 	<div class="row spots">
 		<div class="span4 nav spot-image main">
 			<div >
-				<a href="#" class="thumbnail"> <img data-src="holder.js/300x250" alt=""></a>
+				<a href="{{baseURL}}/spots/{{_id}}/image" class="thumbnail"> <img data-src="{{baseURL}}/spots/{{_id}}/image" alt="image"></a>
 			</div>
 		</div>
 		<div class="span8 nav main">
@@ -28,7 +28,6 @@
 					<div class="row">
 						<div class="span4">
 							<h4>{{title}} <span class="label label-important">Serious</span> {{#if newTag}} <span class="label label-success">New</span> {{/if}}</h4>
-
 						</div>
 					</div>
 					<div class="row">
@@ -37,14 +36,6 @@
 						</div>
 						<div class="span2">
 							{{locationDesc}}
-						</div>
-					</div>
-					<div class="row">
-						<div class="span2">
-							Description:
-						</div>
-						<div class="span2">
-							{{description}}
 						</div>
 					</div>
 					<div class="row">
@@ -74,6 +65,14 @@
 						</div>
 					</div>
 					{{/if}}
+					<div class="row">
+						<div class="span2">
+							Description:
+						</div>
+						<div class="span2">
+							{{description}}
+						</div>
+					</div>
 
 				</div>
 				<!-- 			potential to show map here as well -->
@@ -97,7 +96,6 @@
 <div id="next_startkey" style="display:none;">
 	{{next_startkey}}
 </div>
-<!-- {{{include "footer.html"}}} -->
 <!--
 <script src="script/bootstrap.js"></script>
 <script src="script/bootstrap.min.js"></script>
@@ -138,6 +136,9 @@
             $("#next").attr("href", $("#next").attr("href")+"?startkey=" + next_startkey + "&prevkey=" + startkey);
             $("#next").show();
         }
+        
+        
+        // /spots/:slug/image
 
     })
 </script>

@@ -12,6 +12,9 @@ body {
 	background-repeat: no-repeat;
 	background-position: center top;
 }
+div img {
+	height: 90%;
+}
 
 .lightmap-navbar {
 	color: white;
