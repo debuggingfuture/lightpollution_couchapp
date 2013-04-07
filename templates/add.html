@@ -13,15 +13,25 @@
 
         $("#addForm").submit(function() {
             console.log("submitted");
+            
+            
+			//either put back in same field / other field
+			//only in form obj or in field as well (client impact)
+			//before serialize or after	
+		
+    			var selectedTime =  $('#id_captureDateTime').timepicker('getTimeAsDate').getTime();
 
             var $form = $(this);
+			var formData = $form.serialize()+"&capture_time="+selectedTime;
+			log(formData);
+            
             var $target = $($form.attr('data-target'));
 
             // var $target = $("#modal-body");
             $.ajax({
                 type : $form.attr('method'),
                 url : $form.attr('action'),
-                data : $form.serialize(),
+                data : formData,
 
                 success : function(data, status) {
                     $target.html(data);
@@ -151,6 +161,15 @@
             $("#id_locationDesc").blur();
         });
 
+        $.datepicker.setDefaults($.datepicker.regional[""]);
+         $("#id_capture_date").datepicker($.datepicker.regional["en-US"]);
+         
+         $( "#id_capture_date" ).datepicker( "option", "dateFormat", 'dd/mm/yy');
+         
+         
+         //TODO localization
+         $("#id_captureDateTime").timepicker();
+
     }); 
 </script>
 
@@ -196,7 +215,7 @@
 		<hr class="featurette-divider">
 		<div class="featurette">
 			<img class="featurette-image pull-right" src="{{baseURL}}/_db/c942093f68371eec17bb0d458e0c6344/attachment">
-			<h2 class="featurette-heading">{{t "add.title"}}<span class="muted">{{t "add.desc"}}</span><a href="#myModal" role="button" class="btn btn-xlarge btn-primary" data-toggle="modal">{{t "add.mark"}}</a></h2>
+			<h2 class="featurette-heading">{{t "add.title"}}<span class="muted">{{t "add.desc"}}</span><a href="#myModal" id="openModal" role="button" class="btn btn-xlarge btn-primary" data-toggle="modal">{{t "add.mark"}}</a></h2>
 			<!-- Button to trigger modal -->
 
 			<p class="lead">

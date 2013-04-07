@@ -18,8 +18,8 @@
 	just happended to use nav-->
 	<div class="row spots">
 		<div class="span4 nav spot-image main">
-			<div >
-				<a href="{{baseURL}}/spots/{{_id}}/image" class="thumbnail"> <img data-src="{{baseURL}}/spots/{{_id}}/image" alt="image"></a>
+			<div ><!-- updated to use src instead of data-src at the moment,TODO async load from data-src to src-->
+				<a href="{{baseURL}}/spots/{{_id}}/image" class="thumbnail"> <img src="{{baseURL}}/spots/{{_id}}/image" alt="image"></a>
 			</div>
 		</div>
 		<div class="span8 nav main">
@@ -58,10 +58,20 @@
 					{{#if capture_date}}
 					<div class="row">
 						<div class="span2">
-							Capture Time:
+							Capture Date:
 						</div>
 						<div class="span2">
 							{{capture_date}}
+						</div>
+					</div>
+					{{/if}}
+					{{#if captureDateTime}}
+					<div class="row">
+						<div class="span2">
+							Capture Time:
+						</div>
+						<div class="span2">
+							{{captureDateTime}}
 						</div>
 					</div>
 					{{/if}}

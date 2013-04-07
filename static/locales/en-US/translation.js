@@ -38,7 +38,9 @@ exports.translation = {
             "desc" : "Description",
             "locationDesc" : "Locaiton",
             "description":"Description",
+           "captureDate" : "Capture Date",
             "captureDateTime" : "Capture Date Time",
+             "uploader" : "Uploader"
             
         },
         form_default : {
